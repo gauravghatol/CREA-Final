@@ -1,0 +1,9 @@
+@import "tailwindcss";
+
+:root {
+  /* CREA theme colors */
+  --crea-primary: #000080; /* Navy */
+  --crea-secondary: #FDB813; /* Gold */
+}
+
+html, body, #root { height: 100%; }
