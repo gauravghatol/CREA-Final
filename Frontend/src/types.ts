@@ -37,7 +37,8 @@ export type Manual = { id: string; title: string; url?: string }
 export type BodyMember = { id: string; name: string; designation: string; photoUrl: string }
 
 export type ForumTopic = { id: string; title: string; author: string; createdAt: string; replies: number }
-export type ForumPost = { id: string; topicId: string; author: string; content: string; createdAt: string }
+export type ForumComment = { author: string; content: string; createdAt?: string; createdAtStr?: string }
+export type ForumPost = { id: string; topicId: string; author: string; content: string; createdAt: string; likesCount?: number; comments?: ForumComment[] }
 
 export type Suggestion = {
   id: string

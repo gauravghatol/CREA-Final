@@ -114,7 +114,7 @@ export default function Footer() {
                 </h2>
               </div>
               <p className="mt-1 text-gray-500">
-                Strengthening the engineering fraternity with knowledge, community, and timely support.
+                Strengthening the engineering fraternity with knowledge, community,<br />and timely support.
               </p>
             </div>
             <div className="space-y-1 text-gray-500">
@@ -149,10 +149,10 @@ export default function Footer() {
           </div>
 
           <div>
-            <h3 className="text-center text-xs font-semibold uppercase tracking-wide text-blue-900">
+            <h3 className="text-xs font-semibold uppercase tracking-wide text-blue-900">
               Explore
             </h3>
-            <ul className="mt-2 grid w-fit grid-cols-2 gap-y-2 gap-x-10 text-start mx-auto">
+            <ul className="mt-2 grid grid-cols-2 gap-y-2 gap-x-10">
               {exploreLinks.map(({ label, to }) => (
                 <li key={label}>
                   <Link

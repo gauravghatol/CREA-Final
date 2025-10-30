@@ -61,7 +61,7 @@ export default function Dashboard() {
           <div className="grid grid-cols-2 items-start justify-between gap-20 ">
             <div>
               <h1 className="text-2xl font-bold text-blue-900">Welcome to Central Railway Engineers Association's Portal</h1>
-              <p className="text-sm text-gray-600 mt-1 text-justify">The old observatory stood silhouetted against a sky bruised with the purples and oranges of a dying sunset. Decades of neglect had taken their toll: ivy choked the walls, and one of the great copper dome's panels was missing, leaving a jagged gap like a lost tooth. Inside, the air was still and thick with the smell of dust, decaying paper, and damp stone. A grand, brass telescope, greened with verdigris, still pointed upward, aimed at a patch of sky that would soon be filled with stars. Moonlight, just beginning to assert itself, streamed through the broken dome and illuminated a chaotic sea of star charts and notebooks scattered across the floor, their pages warped by time and moisture. In the center of the room, a heavy oak chair sat before the main console, as if its occupant had only stepped away for a moment, not a lifetime. The silence was profound, broken only by the occasional skitter of a mouse in the walls or the sigh of the wind as it found its way through the fractured glass of the main viewport. It was a place of forgotten ambition, a tomb dedicated to the cosmos.</p>
+              <p className="text-sm text-gray-600 mt-1 text-justify">The Central Railway Engineers Association stands as a beacon of professional excellence, uniting engineering minds across the vast network of Central Railway. Established decades ago, our association has been the cornerstone for engineers who design, maintain, and innovate the critical infrastructure that keeps millions moving daily. From the bustling platforms of Mumbai to the historic stations of Nagpur, our members contribute their expertise to ensure safety, efficiency, and modernization of railway operations. Through collaborative forums, knowledge sharing sessions, and continuous professional development, we foster a community dedicated to engineering excellence. Our association provides a platform for technical discussions, addresses professional concerns, facilitates mutual transfers, and champions the rights and welfare of railway engineers. With divisions spanning across BSL, Pune, Solapur, Nagpur, and Mumbai, we bring together diverse expertise and experiences.</p>
             </div>
             {/* Key stats */}
 
@@ -88,14 +88,6 @@ export default function Dashboard() {
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-4">
         {/* Left column: Quick previews and links */}
         <div className="space-y-4 xl:col-span-2">
-          <SectionHeader title="What's new" subtitle="Recent updates from across the portal" />
-          <div className="grid grid-cols-1 md:grid-cols-2 2xl:grid-cols-4 gap-4">
-            <QuickPreviewCard title="Events" icon={<EventIcon />} items={events.map(e => ({ id: e.id, title: e.title, subtitle: e.location, date: e.date }))} onViewAll={()=>navigate('/events')} delay={0} />
-            <QuickPreviewCard title="Forum" icon={<ForumIcon />} items={topics.map(t => ({ id: t.id, title: t.title, subtitle: `${t.replies} replies`, date: t.createdAt }))} onViewAll={()=>navigate('/forum')} delay={1} />
-            <QuickPreviewCard title="Circulars" icon={<CircularIcon />} items={circulars.map(c => ({ id: c.id, title: c.subject, subtitle: c.boardNumber, date: c.dateOfIssue }))} onViewAll={()=>navigate('/circulars')} delay={2} />
-            <QuickPreviewCard title="Court Cases" icon={<CourtCaseIcon />} items={cases.map(cc => ({ id: cc.id, title: cc.caseNumber, subtitle: cc.subject, date: cc.date }))} onViewAll={()=>navigate('/court-cases')} delay={3} />
-          </div>
-
           <SectionHeader title="Division-wise Member Count" />
           <StaggerContainer className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
             {counts.map((c, index) => (
@@ -107,6 +99,14 @@ export default function Dashboard() {
               </StaggerItem>
             ))}
           </StaggerContainer>
+
+          <SectionHeader title="What's new" subtitle="Recent updates from across the portal" />
+          <div className="grid grid-cols-1 md:grid-cols-2 2xl:grid-cols-4 gap-4">
+            <QuickPreviewCard title="Events" icon={<EventIcon />} items={events.map(e => ({ id: e.id, title: e.title, subtitle: e.location, date: e.date }))} onViewAll={()=>navigate('/events')} delay={0} />
+            <QuickPreviewCard title="Forum" icon={<ForumIcon />} items={topics.map(t => ({ id: t.id, title: t.title, subtitle: `${t.replies} replies`, date: t.createdAt }))} onViewAll={()=>navigate('/forum')} delay={1} />
+            <QuickPreviewCard title="Circulars" icon={<CircularIcon />} items={circulars.map(c => ({ id: c.id, title: c.subject, subtitle: c.boardNumber, date: c.dateOfIssue }))} onViewAll={()=>navigate('/circulars')} delay={2} />
+            <QuickPreviewCard title="Court Cases" icon={<CourtCaseIcon />} items={cases.map(cc => ({ id: cc.id, title: cc.caseNumber, subtitle: cc.subject, date: cc.date }))} onViewAll={()=>navigate('/court-cases')} delay={3} />
+          </div>
         </div>
 
         {/* Right column: Calendar and quick actions */}

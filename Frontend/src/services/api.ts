@@ -306,11 +306,43 @@ export async function getForumTopics(): Promise<ForumTopic[]> {
   const list = await request<ForumTopicDTO[]>('/api/forum/topics')
   return list.map(t => ({ id: t._id, title: t.title, author: t.author, createdAt: t.createdAtStr || new Date(t.createdAt).toISOString(), replies: t.replies ?? 0 }))
 }
-type ForumPostDTO = { _id: string; author: string; content: string; createdAt: string; createdAtStr?: string }
+type ForumPostDTO = { _id: string; author: string; content: string; createdAt: string; createdAtStr?: string; likesCount?: number; comments?: Array<{ author: string; content: string; createdAtStr?: string }> }
 export async function getForumPosts(topicId: string): Promise<ForumPost[]> {
   const list = await request<ForumPostDTO[]>(`/api/forum/topics/${topicId}/posts`)
-  return list.map(p => ({ id: p._id, topicId, author: p.author, content: p.content, createdAt: p.createdAtStr || new Date(p.createdAt).toISOString() }))
+  return list.map(p => ({ id: p._id, topicId, author: p.author, content: p.content, createdAt: p.createdAtStr || new Date(p.createdAt).toISOString(), likesCount: p.likesCount || 0, comments: (p.comments || []).map(c => ({ author: c.author, content: c.content, createdAt: c.createdAtStr || undefined })) }))
 }
+
+// Create a reply/post under a topic
+export async function createForumPost(topicId: string, content: string): Promise<{ id: string; author: string; content: string; createdAt: string }> {
+  const payload = { content }
+  const p = await request<ForumPostDTO>(`/api/forum/topics/${topicId}/posts`, { method: 'POST', body: JSON.stringify(payload) })
+  return { id: p._id, author: p.author, content: p.content, createdAt: p.createdAtStr || new Date(p.createdAt).toISOString() }
+}
+
+// Toggle like for a post
+export async function toggleLikePost(topicId: string, postId: string): Promise<{ likesCount: number; liked: boolean }> {
+  const res = await request<{ likesCount: number; liked: boolean }>(`/api/forum/topics/${topicId}/posts/${postId}/like`, { method: 'POST' })
+  return res
+}
+
+// Add a comment to a post (nested comment)
+export async function addCommentToPost(topicId: string, postId: string, content: string): Promise<{ author: string; content: string; createdAt?: string }> {
+  const res = await request<{ author: string; content: string; createdAtStr?: string }>(`/api/forum/topics/${topicId}/posts/${postId}/comments`, { method: 'POST', body: JSON.stringify({ content }) })
+  return { author: res.author, content: res.content, createdAt: res.createdAtStr }
+}
+
+// Delete a forum post
+export async function deleteForumPost(topicId: string, postId: string): Promise<{ success: boolean }> {
+  await request(`/api/forum/topics/${topicId}/posts/${postId}`, { method: 'DELETE' })
+  return { success: true }
+}
+
+// Delete a comment from a post
+export async function deletePostComment(topicId: string, postId: string, commentIndex: number): Promise<{ success: boolean }> {
+  await request(`/api/forum/topics/${topicId}/posts/${postId}/comments/${commentIndex}`, { method: 'DELETE' })
+  return { success: true }
+}
+
 export async function createForumTopic(input: Omit<ForumTopic, 'id' | 'replies' | 'createdAt'> & { createdAt?: string; replies?: number }): Promise<ForumTopic> {
   const t = await request<ForumTopicDTO>('/api/forum/topics', { method: 'POST', body: JSON.stringify(input) })
   return { id: t._id, title: t.title, author: t.author, createdAt: t.createdAtStr || new Date(t.createdAt).toISOString(), replies: t.replies ?? 0 }

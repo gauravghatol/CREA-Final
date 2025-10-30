@@ -16,6 +16,16 @@ const forumPostSchema = new mongoose.Schema(
     author: { type: String, required: true },
     content: { type: String, required: true },
     createdAtStr: { type: String },
+    // track user ids who liked this post (store as strings to avoid coupling)
+    likedBy: [{ type: String }],
+    // simple nested comments stored on a post
+    comments: [
+      {
+        author: { type: String, required: true },
+        content: { type: String, required: true },
+        createdAtStr: { type: String },
+      },
+    ],
   },
   { timestamps: true }
 );
