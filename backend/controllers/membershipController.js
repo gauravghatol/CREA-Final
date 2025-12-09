@@ -1,0 +1,141 @@
+const Membership = require('../models/membershipModel');
+
+// POST /api/memberships
+exports.submitMembership = async (req, res) => {
+  try {
+    const payload = req.body || {};
+    
+    // Create new membership
+    const membership = new Membership({
+      ...payload,
+      user: req.user?._id,
+      status: 'pending',
+      paymentStatus: 'pending'
+    });
+
+    // Set validity period
+    membership.setValidity();
+
+    // Save membership
+    await membership.save();
+
+    return res.status(201).json({ 
+      success: true, 
+      membershipId: membership.membershipId,
+      paymentStatus: membership.paymentStatus
+    });
+  } catch (err) {
+    console.error('Submit membership error:', err);
+    if (err.code === 11000) { // Duplicate key error
+      return res.status(400).json({ 
+        success: false, 
+        message: 'Email already registered for membership' 
+      });
+    }
+    return res.status(500).json({ success: false, message: 'Server error' });
+  }
+};
+
+// GET /api/memberships (admin)
+exports.listMemberships = async (req, res) => {
+  try {
+    const { status, department, type } = req.query;
+    const query = {};
+
+    if (status) query.status = status;
+    if (department) query.department = department;
+    if (type) query.type = type;
+
+    const list = await Membership.find(query)
+      .sort({ createdAt: -1 })
+      .populate('user', 'name email');
+
+    // Add expiry status to each membership
+    const membershipsWithStatus = list.map(membership => ({
+      ...membership.toObject(),
+      isExpired: membership.isExpired()
+    }));
+
+    return res.json(membershipsWithStatus);
+  } catch (err) {
+    console.error('List memberships error:', err);
+    return res.status(500).json({ message: 'Server error' });
+  }
+};
+
+// PUT /api/memberships/:id/status
+exports.updateMembershipStatus = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { status, paymentStatus, paymentReference } = req.body;
+
+    const membership = await Membership.findById(id);
+    if (!membership) {
+      return res.status(404).json({ success: false, message: 'Membership not found' });
+    }
+
+    if (status) membership.status = status;
+    if (paymentStatus) {
+      membership.paymentStatus = paymentStatus;
+      if (paymentStatus === 'completed') {
+        membership.paymentDate = new Date();
+        membership.paymentReference = paymentReference;
+        membership.status = 'active';
+      }
+    }
+
+    await membership.save();
+    return res.json({ success: true, membership });
+  } catch (err) {
+    console.error('Update membership status error:', err);
+    return res.status(500).json({ success: false, message: 'Server error' });
+  }
+};
+
+// PUT /api/memberships/:id/renew
+exports.renewMembership = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { paymentReference, amount } = req.body;
+
+    const membership = await Membership.findById(id);
+    if (!membership) {
+      return res.status(404).json({ success: false, message: 'Membership not found' });
+    }
+
+    await membership.renew(paymentReference, amount);
+    return res.json({ success: true, membership });
+  } catch (err) {
+    console.error('Renew membership error:', err);
+    return res.status(500).json({ success: false, message: 'Server error' });
+  }
+};
+
+// GET /api/memberships/stats
+exports.getMembershipStats = async (req, res) => {
+  try {
+    const stats = await Membership.aggregate([
+      {
+        $facet: {
+          byStatus: [
+            { $group: { _id: '$status', count: { $sum: 1 } } }
+          ],
+          byDepartment: [
+            { $group: { _id: '$department', count: { $sum: 1 } } }
+          ],
+          byType: [
+            { $group: { _id: '$type', count: { $sum: 1 } } }
+          ],
+          total: [
+            { $group: { _id: null, count: { $sum: 1 } } }
+          ]
+        }
+      }
+    ]);
+
+    return res.json(stats[0]);
+  } catch (err) {
+    console.error('Get membership stats error:', err);
+    return res.status(500).json({ message: 'Server error' });
+  }
+};
