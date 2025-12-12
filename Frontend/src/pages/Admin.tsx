@@ -28,17 +28,15 @@ export default function Admin() {
   const navigate = useNavigate()
 
   useEffect(() => {
-    getEvents().then(setEvents)
-    getManuals().then(setManuals)
-    getCirculars().then(setCirculars)
-  getForumTopics().then(setTopics)
-  getCourtCases().then(setCases)
-  getSuggestions().then(setSuggestions)
-    getSettings().then(setSettings).catch(()=>{})
-    // Preload members (all)
-    adminListUsers().then(setMembers).catch(()=>{})
-    // Preload mutual transfers (all including inactive)
-    getMutualTransfers({ includeInactive: true }).then(setTransfers).catch(()=>{})
+    getEvents().then(setEvents).catch(console.error)
+    getManuals().then(setManuals).catch(console.error)
+    getCirculars().then(setCirculars).catch(console.error)
+    getForumTopics().then(setTopics).catch(console.error)
+    getCourtCases().then(setCases).catch(console.error)
+    getSuggestions().then(setSuggestions).catch(console.error)
+    getSettings().then(setSettings).catch(console.error)
+    adminListUsers().then(setMembers).catch(console.error)
+    getMutualTransfers({ includeInactive: true }).then(setTransfers).catch(console.error)
   }, [])
 
   return (
