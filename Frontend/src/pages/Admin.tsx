@@ -293,46 +293,46 @@ function AboutAdmin(){
       const raw = localStorage.getItem('crea_timeline_milestones')
       const parsed: TimelineStop[] = raw ? JSON.parse(raw) : []
       if (Array.isArray(parsed)) setExtrasMilestones(parsed)
-    } catch {}
+    } catch (e) { console.error(e) }
     try {
       const rawGal = localStorage.getItem('crea_past_events')
       const parsedGal: PastEvent[] = rawGal ? JSON.parse(rawGal) : []
       if (Array.isArray(parsedGal)) setExtrasGallery(parsedGal)
-    } catch {}
+    } catch (e) { console.error(e) }
     try {
       const rawRemoved = localStorage.getItem('crea_timeline_removed_defaults')
       const arr: string[] = rawRemoved ? JSON.parse(rawRemoved) : []
       if (Array.isArray(arr)) setRemovedDefaultMilestones(arr)
-    } catch {}
+    } catch (e) { console.error(e) }
     try {
       const rawRemovedGal = localStorage.getItem('crea_past_events_removed_defaults')
       const arrGal: number[] = rawRemovedGal ? JSON.parse(rawRemovedGal) : []
       if (Array.isArray(arrGal)) setRemovedDefaultGallery(arrGal)
-    } catch {}
+    } catch (e) { console.error(e) }
   }, [])
 
   const saveMilestones = (list: TimelineStop[]) => {
     localStorage.setItem('crea_timeline_milestones', JSON.stringify(list))
     setExtrasMilestones(list)
-    try { window.dispatchEvent(new Event('crea_milestones_updated')) } catch {}
+    try { window.dispatchEvent(new Event('crea_milestones_updated')) } catch (e) { console.error(e) }
   }
 
   const saveGallery = (list: PastEvent[]) => {
     localStorage.setItem('crea_past_events', JSON.stringify(list))
     setExtrasGallery(list)
-    try { window.dispatchEvent(new Event('crea_gallery_updated')) } catch {}
+    try { window.dispatchEvent(new Event('crea_gallery_updated')) } catch (e) { console.error(e) }
   }
 
   const saveRemovedMilestones = (keys: string[]) => {
     localStorage.setItem('crea_timeline_removed_defaults', JSON.stringify(keys))
     setRemovedDefaultMilestones(keys)
-    try { window.dispatchEvent(new Event('crea_milestones_updated')) } catch {}
+    try { window.dispatchEvent(new Event('crea_milestones_updated')) } catch (e) { console.error(e) }
   }
 
   const saveRemovedGallery = (ids: number[]) => {
     localStorage.setItem('crea_past_events_removed_defaults', JSON.stringify(ids))
     setRemovedDefaultGallery(ids)
-    try { window.dispatchEvent(new Event('crea_gallery_updated')) } catch {}
+    try { window.dispatchEvent(new Event('crea_gallery_updated')) } catch (e) { console.error(e) }
   }
 
   const addOne = () => {
@@ -367,7 +367,7 @@ function AboutAdmin(){
     if (!t) { alert('Event title is required'); return }
     if (!img) { alert('Please upload an image file'); return }
     const id = Date.now()
-    const next = [...extrasGallery, { id, title: t, type: 'photo', thumbnail: img }]
+    const next = [...extrasGallery, { id, title: t, type: 'photo' as const, thumbnail: img, description: '', date: new Date().toLocaleDateString() }]
     saveGallery(next)
     if (editingDefaultGalleryId != null) {
       const ids = new Set(removedDefaultGallery)
@@ -1656,19 +1656,6 @@ function MutualTransfersAdmin({ data, onChange }: { data: MutualTransfer[]; onCh
           </motion.div>
         </div>
       )}
-    </div>
-  )
-}
-
-function AboutAdmin() {
-  return (
-    <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-bold">About Page Management</h2>
-      </div>
-      <div className="border rounded-lg p-6 bg-white">
-        <p className="text-gray-600">About page content management coming soon. This will allow editing timeline stops and past events.</p>
-      </div>
     </div>
   )
 }
