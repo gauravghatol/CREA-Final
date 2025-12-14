@@ -92,141 +92,6 @@ export default function Admin() {
         </div>
       </motion.div>
 
-      {/* Quick Overview Cards */}
-      <StaggerContainer className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
-        <StaggerItem>
-          <motion.div 
-            className="relative rounded-xl border border-gray-200 bg-white p-5 shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden group"
-            whileHover={{ y: -4 }}
-          >
-            <div className="absolute top-0 right-0 w-20 h-20 bg-blue-50 rounded-full blur-2xl opacity-50 group-hover:opacity-100 transition-opacity" />
-            <div className="relative">
-              <div className="flex items-center justify-between mb-3">
-                <h3 className="font-semibold text-gray-800 flex items-center gap-2">
-                  <span className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
-                    <svg className="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                    </svg>
-                  </span>
-                  Events
-                </h3>
-                <button className="text-xs text-[var(--primary)] hover:underline font-medium" onClick={() => navigate('/events')}>View all →</button>
-              </div>
-              <ul className="space-y-2">
-                {events.slice(0,2).map(e => (
-                  <li key={e.id}>
-                    <button onClick={() => navigate('/events')} className="w-full text-left rounded-lg px-3 py-2 hover:bg-gray-50 transition-colors">
-                      <div className="text-sm font-medium text-gray-800 truncate">{e.title}</div>
-                      <div className="text-xs text-gray-600">{new Date(e.date).toLocaleDateString()} • {e.location}</div>
-                    </button>
-                  </li>
-                ))}
-                {events.length === 0 && <li className="text-sm text-gray-500 px-3 py-2">No events yet.</li>}
-              </ul>
-            </div>
-          </motion.div>
-        </StaggerItem>
-
-        <StaggerItem>
-          <motion.div 
-            className="relative rounded-xl border border-gray-200 bg-white p-5 shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden group"
-            whileHover={{ y: -4 }}
-          >
-            <div className="absolute top-0 right-0 w-20 h-20 bg-green-50 rounded-full blur-2xl opacity-50 group-hover:opacity-100 transition-opacity" />
-            <div className="relative">
-              <div className="flex items-center justify-between mb-3">
-                <h3 className="font-semibold text-gray-800 flex items-center gap-2">
-                  <span className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
-                    <svg className="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z" />
-                    </svg>
-                  </span>
-                  Forum
-                </h3>
-                <button className="text-xs text-[var(--primary)] hover:underline font-medium" onClick={() => navigate('/forum')}>View all →</button>
-              </div>
-              <ul className="space-y-2">
-                {topics.slice(0,2).map(t => (
-                  <li key={t.id}>
-                    <button onClick={() => navigate('/forum')} className="w-full text-left rounded-lg px-3 py-2 hover:bg-gray-50 transition-colors">
-                      <div className="text-sm font-medium text-gray-800 truncate">{t.title}</div>
-                      <div className="text-xs text-gray-600">{t.replies} replies • {new Date(t.createdAt).toLocaleDateString()}</div>
-                    </button>
-                  </li>
-                ))}
-                {topics.length === 0 && <li className="text-sm text-gray-500 px-3 py-2">No topics yet.</li>}
-              </ul>
-            </div>
-          </motion.div>
-        </StaggerItem>
-
-        <StaggerItem>
-          <motion.div 
-            className="relative rounded-xl border border-gray-200 bg-white p-5 shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden group"
-            whileHover={{ y: -4 }}
-          >
-            <div className="absolute top-0 right-0 w-20 h-20 bg-purple-50 rounded-full blur-2xl opacity-50 group-hover:opacity-100 transition-opacity" />
-            <div className="relative">
-              <div className="flex items-center justify-between mb-3">
-                <h3 className="font-semibold text-gray-800 flex items-center gap-2">
-                  <span className="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center">
-                    <svg className="w-4 h-4 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                    </svg>
-                  </span>
-                  Circulars
-                </h3>
-                <button className="text-xs text-[var(--primary)] hover:underline font-medium" onClick={() => navigate('/documents?tab=circular')}>View all →</button>
-              </div>
-              <ul className="space-y-2">
-                {circulars.slice(0,2).map(c => (
-                  <li key={c.id}>
-                    <button onClick={() => navigate('/documents?tab=circular')} className="w-full text-left rounded-lg px-3 py-2 hover:bg-gray-50 transition-colors">
-                      <div className="text-sm font-medium text-gray-800 truncate">{c.subject}</div>
-                      <div className="text-xs text-gray-600">{c.boardNumber} • {new Date(c.dateOfIssue).toLocaleDateString()}</div>
-                    </button>
-                  </li>
-                ))}
-                {circulars.length === 0 && <li className="text-sm text-gray-500 px-3 py-2">No circulars yet.</li>}
-              </ul>
-            </div>
-          </motion.div>
-        </StaggerItem>
-
-        <StaggerItem>
-          <motion.div 
-            className="relative rounded-xl border border-gray-200 bg-white p-5 shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden group"
-            whileHover={{ y: -4 }}
-          >
-            <div className="absolute top-0 right-0 w-20 h-20 bg-red-50 rounded-full blur-2xl opacity-50 group-hover:opacity-100 transition-opacity" />
-            <div className="relative">
-              <div className="flex items-center justify-between mb-3">
-                <h3 className="font-semibold text-gray-800 flex items-center gap-2">
-                  <span className="w-8 h-8 bg-red-100 rounded-lg flex items-center justify-center">
-                    <svg className="w-4 h-4 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3" />
-                    </svg>
-                  </span>
-                  Court Cases
-                </h3>
-                <button className="text-xs text-[var(--primary)] hover:underline font-medium" onClick={() => navigate('/documents?tab=court-case')}>View all →</button>
-              </div>
-              <ul className="space-y-2">
-                {cases.slice(0,2).map(cc => (
-                  <li key={cc.id}>
-                    <button onClick={() => navigate('/documents?tab=court-case')} className="w-full text-left rounded-lg px-3 py-2 hover:bg-gray-50 transition-colors">
-                      <div className="text-sm font-medium text-gray-800 truncate">{cc.caseNumber}</div>
-                      <div className="text-xs text-gray-600">{new Date(cc.date).toLocaleDateString()} • {cc.subject}</div>
-                    </button>
-                  </li>
-                ))}
-                {cases.length === 0 && <li className="text-sm text-gray-500 px-3 py-2">No court cases.</li>}
-              </ul>
-            </div>
-          </motion.div>
-        </StaggerItem>
-      </StaggerContainer>
-
       {/* Tab Navigation */}
       <div className="flex gap-2 flex-wrap">
         {(['breaking-news','events','documents','forum','suggestions','members','settings','transfers','association-body','donations'] as const).map(k => (
@@ -1146,17 +1011,122 @@ function BreakingNewsAdmin({ data, onChange }: { data: EventItem[]; onChange: (d
 
 function EventsAdmin({ data, onChange }: { data: EventItem[]; onChange: (d: EventItem[])=>void }){
   const [form, setForm] = useState<Omit<EventItem,'id'>>({ title:'', date:'', location:'', description:'', photos:[], breaking:false })
+  const [editingId, setEditingId] = useState<string | null>(null)
+  const [editForm, setEditForm] = useState<Partial<EventItem>>({})
   const [selectMode, setSelectMode] = useState(false)
+  const [completedSelectMode, setCompletedSelectMode] = useState(false)
   const [selected, setSelected] = useState<Set<string>>(new Set())
+  const [completedSelected, setCompletedSelected] = useState<Set<string>>(new Set())
   const [deleting, setDeleting] = useState(false)
+  const [submitting, setSubmitting] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
+  const [completedSearchQuery, setCompletedSearchQuery] = useState('')
+  const [uploadingPhotos, setUploadingPhotos] = useState<string | null>(null)
 
-  const filteredEvents = data.filter(e => 
-    e.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    e.location.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    e.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    e.date.includes(searchQuery)
-  )
+  const today = new Date()
+  today.setHours(0, 0, 0, 0)
+
+  const filteredUpcomingEvents = data
+    .filter(e => new Date(e.date) >= today)
+    .filter(e => 
+      e.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      e.location.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      e.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      e.date.includes(searchQuery)
+    )
+
+  const filteredCompletedEvents = data
+    .filter(e => new Date(e.date) < today)
+    .filter(e => 
+      e.title.toLowerCase().includes(completedSearchQuery.toLowerCase()) ||
+      e.location.toLowerCase().includes(completedSearchQuery.toLowerCase()) ||
+      e.description.toLowerCase().includes(completedSearchQuery.toLowerCase()) ||
+      e.date.includes(completedSearchQuery)
+    )
+
+  const submit = async () => {
+    if (!form.title || !form.date || !form.location || !form.description) {
+      alert('Please fill in all fields')
+      return
+    }
+    setSubmitting(true)
+    try {
+      const created = await createEvent(form)
+      onChange([...data, created])
+      setForm({ title:'', date:'', location:'', description:'', photos:[], breaking:false })
+    } catch (error) {
+      alert('Failed to create event')
+      console.error(error)
+    } finally {
+      setSubmitting(false)
+    }
+  }
+
+  const handlePhotoUpload = async (eventId: string, files: FileList | null) => {
+    if (!files || files.length === 0) return
+    
+    setUploadingPhotos(eventId)
+    try {
+      const photoPromises = Array.from(files).map(file => {
+        return new Promise<string>((resolve, reject) => {
+          const reader = new FileReader()
+          reader.onloadend = () => resolve(reader.result as string)
+          reader.onerror = reject
+          reader.readAsDataURL(file)
+        })
+      })
+      
+      const newPhotos = await Promise.all(photoPromises)
+      const event = data.find(e => e.id === eventId)
+      if (event) {
+        const updatedEvent = { ...event, photos: [...(event.photos || []), ...newPhotos] }
+        const updated = await updateEvent(eventId, { photos: updatedEvent.photos })
+        onChange(data.map(e => e.id === eventId ? updated : e))
+      }
+    } catch (error) {
+      alert('Failed to upload photos')
+      console.error(error)
+    } finally {
+      setUploadingPhotos(null)
+    }
+  }
+
+  const handleRemovePhoto = async (eventId: string, photoIndex: number) => {
+    const event = data.find(e => e.id === eventId)
+    if (!event) return
+    
+    const newPhotos = event.photos?.filter((_, idx) => idx !== photoIndex) || []
+    try {
+      const updated = await updateEvent(eventId, { photos: newPhotos })
+      onChange(data.map(e => e.id === eventId ? updated : e))
+    } catch (error) {
+      alert('Failed to remove photo')
+      console.error(error)
+    }
+  }
+
+  const handleEdit = (event: EventItem) => {
+    setEditingId(event.id)
+    setEditForm({ 
+      title: event.title, 
+      date: event.date, 
+      location: event.location, 
+      description: event.description,
+      breaking: event.breaking
+    })
+  }
+
+  const handleSaveEdit = async () => {
+    if (!editingId) return
+    try {
+      const updated = await updateEvent(editingId, editForm)
+      onChange(data.map(e => e.id === editingId ? updated : e))
+      setEditingId(null)
+      setEditForm({})
+    } catch (error) {
+      alert('Failed to update event')
+    }
+  }
 
   const toggleSelect = (id: string) => {
     const newSelected = new Set(selected)
@@ -1168,11 +1138,29 @@ function EventsAdmin({ data, onChange }: { data: EventItem[]; onChange: (d: Even
     setSelected(newSelected)
   }
 
+  const toggleCompletedSelect = (id: string) => {
+    const newSelected = new Set(completedSelected)
+    if (newSelected.has(id)) {
+      newSelected.delete(id)
+    } else {
+      newSelected.add(id)
+    }
+    setCompletedSelected(newSelected)
+  }
+
   const toggleSelectAll = () => {
-    if (selected.size === filteredEvents.length) {
+    if (selected.size === filteredUpcomingEvents.length) {
       setSelected(new Set())
     } else {
-      setSelected(new Set(filteredEvents.map(e => e.id)))
+      setSelected(new Set(filteredUpcomingEvents.map(e => e.id)))
+    }
+  }
+
+  const toggleCompletedSelectAll = () => {
+    if (completedSelected.size === filteredCompletedEvents.length) {
+      setCompletedSelected(new Set())
+    } else {
+      setCompletedSelected(new Set(filteredCompletedEvents.map(e => e.id)))
     }
   }
 
@@ -1185,6 +1173,22 @@ function EventsAdmin({ data, onChange }: { data: EventItem[]; onChange: (d: Even
       await Promise.all(Array.from(selected).map(id => deleteEvent(id)))
       onChange(data.filter(e => !selected.has(e.id)))
       setSelected(new Set())
+    } catch (error) {
+      alert('Error deleting events')
+    } finally {
+      setDeleting(false)
+    }
+  }
+
+  const deleteCompletedSelected = async () => {
+    if (completedSelected.size === 0) return
+    if (!confirm(`Are you sure you want to delete ${completedSelected.size} selected completed event(s)?`)) return
+    
+    setDeleting(true)
+    try {
+      await Promise.all(Array.from(completedSelected).map(id => deleteEvent(id)))
+      onChange(data.filter(e => !completedSelected.has(e.id)))
+      setCompletedSelected(new Set())
     } catch (error) {
       alert('Error deleting events')
     } finally {
@@ -1213,66 +1217,49 @@ function EventsAdmin({ data, onChange }: { data: EventItem[]; onChange: (d: Even
             <Input label="Date" type="date" value={form.date} onChange={(e)=>setForm({...form, date:e.target.value})} />
             <Input label="Location" value={form.location} onChange={(e)=>setForm({...form, location:e.target.value})} />
           </div>
-          <Input label="Description" value={form.description} onChange={(e)=>setForm({...form, description:e.target.value})} />
-          <div className="flex items-center justify-between gap-4">
-            <label className="text-sm inline-flex items-center gap-2 font-medium text-gray-700 cursor-pointer">
-              <input type="checkbox" className="w-4 h-4 rounded border-gray-300 text-[var(--primary)] focus:ring-[var(--primary)]" checked={!!form.breaking} onChange={(e)=>setForm({...form, breaking:e.target.checked})}/>
-              Mark as Breaking News
-            </label>
-            <Button onClick={async()=>{ const created = await createEvent(form); onChange([...data, created]); setForm({ title:'', date:'', location:'', description:'', photos:[], breaking:false }) }}>
-              <span className="flex items-center gap-2">
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4" />
-                </svg>
-                Add Event
-              </span>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
+            <textarea 
+              value={form.description} 
+              onChange={(e)=>setForm({...form, description:e.target.value})} 
+              className="w-full rounded-md border border-gray-300 p-2 focus:outline-none focus:ring-2 focus:ring-[var(--primary)]" 
+              rows={3} 
+              placeholder="Event description"
+            />
+          </div>
+          <div className="flex justify-end">
+            <Button onClick={submit} disabled={submitting}>
+              {submitting ? 'Adding...' : 'Add Event'}
             </Button>
           </div>
         </div>
       </motion.div>
+
+      {/* Upcoming Events Section */}
       <motion.div 
-        className="rounded-xl border border-gray-200 bg-white shadow-sm overflow-hidden"
+        className="rounded-2xl border-2 border-gray-200 bg-white shadow-md overflow-hidden"
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.1 }}
       >
-        {data.length > 0 && (
-          <div className="px-6 py-4 border-b border-gray-200">
-            <div className="relative">
-              <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-              </svg>
-              <input
-                type="text"
-                placeholder="Search events by title, location, description, or date..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--primary)] focus:border-transparent text-sm"
-              />
-              {searchQuery && (
-                <button
-                  onClick={() => setSearchQuery('')}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
-                >
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
-                  </svg>
-                </button>
-              )}
-            </div>
-          </div>
-        )}
-        <div className="bg-gradient-to-r from-gray-50 to-gray-100 px-6 py-4 border-b border-gray-200">
+        {/* Section Header */}
+        <div className="bg-gradient-to-r from-blue-50 to-blue-100 px-6 py-4 border-b-2 border-blue-200">
           <div className="flex items-center justify-between">
-            <h3 className="text-lg font-semibold text-gray-800">Existing Events ({filteredEvents.length}{searchQuery && ` of ${data.length}`})</h3>
+            <h3 className="text-xl font-bold text-gray-900 flex items-center gap-3">
+              <span className="w-10 h-10 bg-blue-500 rounded-xl flex items-center justify-center">
+                <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+              </span>
+              Upcoming Events ({filteredUpcomingEvents.length}{searchQuery && ` of ${data.filter(e => new Date(e.date) >= today).length}`})
+            </h3>
             <div className="flex items-center gap-3">
               {selectMode ? (
                 <>
-                  {data.length > 0 && (
+                  {filteredUpcomingEvents.length > 0 && (
                     <label className="flex items-center gap-2 text-sm text-gray-600 cursor-pointer hover:text-gray-900">
                       <input
                         type="checkbox"
-                        checked={selected.size === data.length && data.length > 0}
+                        checked={selected.size === filteredUpcomingEvents.length && filteredUpcomingEvents.length > 0}
                         onChange={toggleSelectAll}
                         className="w-4 h-4 rounded border-gray-300 text-[var(--primary)] focus:ring-[var(--primary)]"
                       />
@@ -1287,38 +1274,313 @@ function EventsAdmin({ data, onChange }: { data: EventItem[]; onChange: (d: Even
                   <Button variant="secondary" onClick={() => { setSelectMode(false); setSelected(new Set()); }}>Cancel</Button>
                 </>
               ) : (
-                filteredEvents.length > 0 && <Button variant="secondary" onClick={() => setSelectMode(true)}>Select</Button>
+                filteredUpcomingEvents.length > 0 && <Button variant="secondary" onClick={() => setSelectMode(true)}>Select</Button>
               )}
             </div>
           </div>
         </div>
-        <div className="divide-y divide-gray-100">
-          {filteredEvents.map(e=> (
-            <div key={e.id} className={`p-5 flex items-center gap-4 transition-colors ${selected.has(e.id) ? 'bg-blue-50' : 'hover:bg-gray-50'}`}>
-              {selectMode && (
-                <input
-                  type="checkbox"
-                  checked={selected.has(e.id)}
-                  onChange={() => toggleSelect(e.id)}
-                  className="w-4 h-4 rounded border-gray-300 text-[var(--primary)] focus:ring-[var(--primary)]"
-                />
-              )}
-              <div className="flex-1">
-                <div className="font-semibold text-gray-800 flex items-center gap-2">
-                  {e.title}
-                  {e.breaking && <span className="bg-red-100 text-red-700 px-2 py-0.5 rounded text-xs font-bold">BREAKING</span>}
+        
+        {/* Search Bar */}
+        <div className="px-6 py-4 bg-gray-50 border-b border-gray-200">
+          <div className="relative">
+            <input
+              type="text"
+              placeholder="Search upcoming events..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full px-4 py-3 pl-11 pr-4 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+            />
+            <svg className="absolute left-4 top-3.5 w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+          </div>
+        </div>
+        
+        {/* Events List */}
+        <div className="divide-y divide-gray-200">
+          {filteredUpcomingEvents.map(e=> (
+            <div key={e.id} className={`p-6 transition-all duration-200 ${selected.has(e.id) ? 'bg-blue-50 border-l-4 border-blue-500' : 'hover:bg-gray-50'}`}>
+              {editingId === e.id ? (
+                <div className="space-y-3">
+                  <Input label="Title" value={editForm.title || ''} onChange={(ev)=>setEditForm({...editForm, title:ev.target.value})} />
+                  <div className="grid grid-cols-2 gap-3">
+                    <Input label="Date" type="date" value={editForm.date || ''} onChange={(ev)=>setEditForm({...editForm, date:ev.target.value})} />
+                    <Input label="Location" value={editForm.location || ''} onChange={(ev)=>setEditForm({...editForm, location:ev.target.value})} />
+                  </div>
+                  <Input label="Description" value={editForm.description || ''} onChange={(ev)=>setEditForm({...editForm, description:ev.target.value})} />
+                  <div className="flex items-center justify-end gap-2">
+                    <Button variant="secondary" onClick={() => { setEditingId(null); setEditForm({}) }}>Cancel</Button>
+                    <Button onClick={handleSaveEdit}>Save Changes</Button>
+                  </div>
                 </div>
-                <div className="text-sm text-gray-600 mt-1">{e.date} • {e.location}</div>
-              </div>
-              <div className="flex gap-2">
-                <Button variant="secondary" onClick={async()=>{ const upd = await updateEvent(e.id,{ breaking: !e.breaking }); onChange(data.map(d=>d.id===e.id?upd:d)) }}>Toggle Breaking</Button>
-              </div>
+              ) : (
+                <div className="flex items-center gap-4">
+                  {selectMode && (
+                    <input
+                      type="checkbox"
+                      checked={selected.has(e.id)}
+                      onChange={() => toggleSelect(e.id)}
+                      className="w-4 h-4 rounded border-gray-300 text-[var(--primary)] focus:ring-[var(--primary)]"
+                    />
+                  )}
+                  <div className="flex-1">
+                    <div className="flex items-center gap-3 mb-2">
+                      <h4 className="text-lg font-bold text-gray-900">{e.title}</h4>
+                      {e.breaking && (
+                        <span className="inline-flex items-center gap-1 bg-gradient-to-r from-red-500 to-red-600 text-white px-3 py-1 rounded-full text-xs font-bold shadow-md">
+                          <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                            <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                          </svg>
+                          BREAKING
+                        </span>
+                      )}
+                    </div>
+                    <div className="flex items-center gap-4 text-sm text-gray-600">
+                      <span className="flex items-center gap-1.5">
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                        </svg>
+                        {e.date}
+                      </span>
+                      <span className="flex items-center gap-1.5">
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                        </svg>
+                        {e.location}
+                      </span>
+                    </div>
+                  </div>
+                  {!selectMode && (
+                    <div className="flex gap-2">
+                      <Button variant="secondary" onClick={() => handleEdit(e)}>
+                        <svg className="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                        </svg>
+                        Edit
+                      </Button>
+                      <Button variant="secondary" onClick={async()=>{ const upd = await updateEvent(e.id,{ breaking: !e.breaking }); onChange(data.map(d=>d.id===e.id?upd:d)) }}>Toggle Breaking</Button>
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
           ))}
-          {data.length === 0 && <div className="p-8 text-center text-gray-500">No events found. Add your first event above.</div>}
-          {data.length > 0 && filteredEvents.length === 0 && (
-            <div className="p-8 text-center text-gray-500">
-              No events match your search. <button onClick={() => setSearchQuery('')} className="text-[var(--primary)] underline hover:text-[var(--accent)]">Clear search</button>
+          {filteredUpcomingEvents.length === 0 && (
+            <div className="p-12 text-center">
+              <svg className="w-16 h-16 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              </svg>
+              <p className="text-gray-500 font-medium">{searchQuery ? 'No upcoming events match your search.' : 'No upcoming events scheduled.'}</p>
+            </div>
+          )}
+        </div>
+      </motion.div>
+
+      {/* Completed Events Section */}
+      <motion.div 
+        className="rounded-2xl border-2 border-gray-200 bg-white shadow-md overflow-hidden"
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.1 }}
+      >
+        {/* Section Header */}
+        <div className="bg-gradient-to-r from-slate-50 to-gray-100 px-6 py-4 border-b-2 border-gray-300">
+          <div className="flex items-center justify-between">
+            <h3 className="text-xl font-bold text-gray-900 flex items-center gap-3">
+              <span className="w-10 h-10 bg-slate-600 rounded-xl flex items-center justify-center">
+                <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                </svg>
+              </span>
+              Completed Events ({filteredCompletedEvents.length}{completedSearchQuery && ` of ${data.filter(e => new Date(e.date) < today).length}`})
+            </h3>
+            <div className="flex items-center gap-3">
+              {completedSelectMode ? (
+                <>
+                  {filteredCompletedEvents.length > 0 && (
+                    <label className="flex items-center gap-2 text-sm text-gray-600 cursor-pointer hover:text-gray-900">
+                      <input
+                        type="checkbox"
+                        checked={completedSelected.size === filteredCompletedEvents.length && filteredCompletedEvents.length > 0}
+                        onChange={toggleCompletedSelectAll}
+                        className="w-4 h-4 rounded border-gray-300 text-[var(--primary)] focus:ring-[var(--primary)]"
+                      />
+                      Select All
+                    </label>
+                  )}
+                  {completedSelected.size > 0 && (
+                    <Button variant="danger" onClick={deleteCompletedSelected} disabled={deleting}>
+                      {deleting ? 'Deleting...' : `Delete ${completedSelected.size} Selected`}
+                    </Button>
+                  )}
+                  <Button variant="secondary" onClick={() => { setCompletedSelectMode(false); setCompletedSelected(new Set()); }}>Cancel</Button>
+                </>
+              ) : (
+                filteredCompletedEvents.length > 0 && <Button variant="secondary" onClick={() => setCompletedSelectMode(true)}>Select</Button>
+              )}
+            </div>
+          </div>
+        </div>
+        
+        {/* Search Bar */}
+        {filteredCompletedEvents.length > 0 && (
+          <div className="px-6 py-4 bg-gray-50 border-b border-gray-200">
+            <div className="relative">
+              <svg className="absolute left-4 top-3.5 w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
+              <input
+                type="text"
+                placeholder="Search completed events..."
+                value={completedSearchQuery}
+                onChange={(e) => setCompletedSearchQuery(e.target.value)}
+                className="w-full px-4 py-3 pl-11 pr-11 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-slate-500 focus:border-slate-500 transition-all"
+              />
+              {completedSearchQuery && (
+                <button
+                  onClick={() => setCompletedSearchQuery('')}
+                  className="absolute right-4 top-3.5 text-gray-400 hover:text-gray-600 transition-colors"
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              )}
+            </div>
+          </div>
+        )}
+        
+        {/* Events List */}
+        <div className="divide-y divide-gray-200">
+          {filteredCompletedEvents.map(e=> (
+            <div key={e.id} className={`p-6 transition-all duration-200 ${completedSelected.has(e.id) ? 'bg-slate-50 border-l-4 border-slate-500' : 'hover:bg-gray-50'}`}>
+              {editingId === e.id ? (
+                <div className="space-y-3">
+                  <Input label="Title" value={editForm.title || ''} onChange={(ev)=>setEditForm({...editForm, title:ev.target.value})} />
+                  <div className="grid grid-cols-2 gap-3">
+                    <Input label="Date" type="date" value={editForm.date || ''} onChange={(ev)=>setEditForm({...editForm, date:ev.target.value})} />
+                    <Input label="Location" value={editForm.location || ''} onChange={(ev)=>setEditForm({...editForm, location:ev.target.value})} />
+                  </div>
+                  <Input label="Description" value={editForm.description || ''} onChange={(ev)=>setEditForm({...editForm, description:ev.target.value})} />
+                  <div className="flex items-center justify-end gap-2">
+                    <Button variant="secondary" onClick={() => { setEditingId(null); setEditForm({}) }}>Cancel</Button>
+                    <Button onClick={handleSaveEdit}>Save Changes</Button>
+                  </div>
+                </div>
+              ) : (
+                <div className="flex items-start gap-4">
+                  {completedSelectMode && (
+                    <input
+                      type="checkbox"
+                      checked={completedSelected.has(e.id)}
+                      onChange={() => toggleCompletedSelect(e.id)}
+                      className="w-4 h-4 mt-1 rounded border-gray-300 text-[var(--primary)] focus:ring-[var(--primary)]"
+                    />
+                  )}
+                  <div className="flex-1">
+                    <div className="flex items-center gap-3 mb-2">
+                      <h4 className="text-lg font-bold text-gray-900">{e.title}</h4>
+                      <span className="inline-flex items-center gap-1.5 bg-gradient-to-r from-slate-500 to-gray-600 text-white px-3 py-1 rounded-full text-xs font-bold shadow-sm">
+                        <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                        </svg>
+                        Completed
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-4 text-sm text-gray-600 mb-4">
+                      <span className="flex items-center gap-1.5">
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                        </svg>
+                        {e.date}
+                      </span>
+                      <span className="flex items-center gap-1.5">
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                        </svg>
+                        {e.location}
+                      </span>
+                    </div>
+                    
+                    {/* Photo Upload Section */}
+                    <div className="mt-4 p-4 bg-gray-50 rounded-xl border border-gray-200">
+                      <div className="flex items-center justify-between mb-3">
+                        <h5 className="text-sm font-bold text-gray-700 flex items-center gap-2">
+                          <svg className="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                          </svg>
+                          Event Photos ({e.photos?.length || 0})
+                        </h5>
+                        <label className="cursor-pointer">
+                          <input
+                            type="file"
+                            multiple
+                            accept="image/*"
+                            onChange={(ev) => handlePhotoUpload(e.id, ev.target.files)}
+                            className="hidden"
+                            disabled={uploadingPhotos === e.id}
+                          />
+                          <span className="inline-flex items-center gap-2 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 text-sm font-semibold shadow-sm transition-colors">
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4" />
+                            </svg>
+                            {uploadingPhotos === e.id ? 'Uploading...' : 'Add Photos'}
+                          </span>
+                        </label>
+                      </div>
+                    
+                      {e.photos && e.photos.length > 0 ? (
+                        <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-3">
+                          {e.photos.map((photo, idx) => (
+                            <div key={idx} className="relative group aspect-square">
+                              <img 
+                                src={photo} 
+                                alt={`Event ${idx + 1}`} 
+                                className="w-full h-full object-cover rounded-lg border-2 border-gray-200 shadow-sm group-hover:shadow-md transition-shadow"
+                              />
+                              <button
+                                onClick={() => handleRemovePhoto(e.id, idx)}
+                                className="absolute -top-2 -right-2 w-7 h-7 bg-red-500 text-white rounded-full opacity-0 group-hover:opacity-100 transition-all hover:bg-red-600 hover:scale-110 flex items-center justify-center shadow-lg"
+                              >
+                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                                </svg>
+                              </button>
+                            </div>
+                          ))}
+                        </div>
+                      ) : (
+                        <div className="text-center py-6 text-gray-400 text-sm">
+                          <svg className="w-12 h-12 mx-auto mb-2 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                          </svg>
+                          No photos uploaded yet
+                        </div>
+                      )}
+                    </div>
+                    {!completedSelectMode && (
+                      <div className="mt-4">
+                        <Button variant="secondary" onClick={() => handleEdit(e)}>
+                          <svg className="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                          </svg>
+                          Edit Event
+                        </Button>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+            </div>
+          ))}
+          {filteredCompletedEvents.length === 0 && (
+            <div className="p-12 text-center">
+              <svg className="w-16 h-16 text-gray-300 mx-auto mb-4" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+              </svg>
+              <p className="text-gray-500 font-medium">{completedSearchQuery ? 'No completed events match your search.' : 'No completed events yet.'}</p>
             </div>
           )}
         </div>
