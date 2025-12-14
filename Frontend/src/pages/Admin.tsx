@@ -3786,15 +3786,24 @@ function DonationsAdmin() {
   const fetchDonations = async () => {
     try {
       setLoading(true)
-      const token = localStorage.getItem('token')
+      const token = localStorage.getItem('crea:token')
+      if (!token) {
+        console.error('No authentication token found')
+        setLoading(false)
+        return
+      }
       const response = await fetch('http://localhost:5001/api/donations', {
         headers: {
-          'Authorization': `Bearer ${token}`
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
         }
       })
       const data = await response.json()
+      console.log('Donations response:', data)
       if (data.success) {
         setDonations(data.data)
+      } else {
+        console.error('Failed to fetch donations:', data.message)
       }
     } catch (error) {
       console.error('Error fetching donations:', error)
