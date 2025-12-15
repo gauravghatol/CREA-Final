@@ -4,7 +4,6 @@ import Input from '../components/Input'
 import Button from '../components/Button'
 import { submitMembership, getMembershipPricing } from '../services/api'
 import { usePageTitle } from '../hooks/usePageTitle'
-import { DIVISIONS } from '../types'
 import type { MembershipFormData } from '../services/api'
 import FileUploader from '../components/FileUploader'
 import { STATES, getCitiesForState } from '../data/statesAndCities'
@@ -363,51 +362,51 @@ export default function Membership() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-gray-100 py-12">
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gray-50 py-8">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header with Back Button */}
         <motion.div 
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="mb-8"
+          className="mb-6"
         >
           <button 
             onClick={() => setShowForm(false)}
-            className="mb-4 flex items-center gap-2 text-[var(--primary)] hover:text-blue-700 transition-colors font-medium"
+            className="mb-3 flex items-center gap-1.5 text-[var(--primary)] hover:text-blue-700 transition-colors font-medium text-sm"
           >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7" />
             </svg>
             Back to Plans
           </button>
-          <h1 className="text-3xl md:text-4xl font-bold text-[var(--primary)] mb-2">Apply for Membership</h1>
-          <p className="text-gray-600">Fill in your details and complete the payment process.</p>
+          <h1 className="text-2xl font-bold text-gray-900 mb-1">Apply for Membership</h1>
+          <p className="text-sm text-gray-600">Fill in your details and complete the payment process.</p>
         </motion.div>
 
       {membershipId ? (
         <motion.div 
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
-          className="bg-white rounded-2xl shadow-xl p-8 border-2 border-green-500"
+          className="bg-white rounded-lg shadow-sm border border-green-200 p-6"
         >
           <div className="text-center">
-            <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-              <svg className="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div className="w-14 h-14 bg-green-50 rounded-full flex items-center justify-center mx-auto mb-3">
+              <svg className="w-7 h-7 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
               </svg>
             </div>
-            <h2 className="text-2xl font-bold text-green-800 mb-2">Application Submitted Successfully!</h2>
-            <p className="text-gray-700 mb-4">Membership ID: <span className="font-mono font-bold text-[var(--primary)]">{membershipId}</span></p>
-            <p className="text-sm text-gray-600">Your membership will be activated after payment verification.</p>
+            <h2 className="text-xl font-bold text-green-800 mb-2">Application Submitted Successfully!</h2>
+            <p className="text-sm text-gray-700 mb-3">Membership ID: <span className="font-mono font-bold text-[var(--primary)]">{membershipId}</span></p>
+            <p className="text-xs text-gray-600">Your membership will be activated after payment verification.</p>
           </div>
         </motion.div>
       ) : (
-        <div className="space-y-6">
+        <div className="space-y-5">
           {/* Progress Steps */}
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="bg-white rounded-xl shadow-lg p-6"
+            className="bg-white rounded-lg shadow-sm border border-gray-200 p-5"
           >
             <div className="flex items-center justify-between">
               {[
@@ -418,22 +417,22 @@ export default function Membership() {
               ].map((s, idx) => (
                 <div key={s.num} className="flex items-center flex-1">
                   <div className="flex flex-col items-center flex-1">
-                    <div className={`w-12 h-12 rounded-full flex items-center justify-center text-lg font-bold transition-all duration-300 ${
+                    <div className={`w-10 h-10 rounded-full flex items-center justify-center text-base font-semibold transition-all duration-300 ${
                       step >= s.num 
-                        ? 'bg-gradient-to-br from-[var(--primary)] to-blue-600 text-white shadow-lg scale-110' 
-                        : 'bg-gray-200 text-gray-500'
+                        ? 'bg-[var(--primary)] text-white shadow-sm' 
+                        : 'bg-gray-100 text-gray-400'
                     }`}>
                       {step > s.num ? '✓' : s.icon}
                     </div>
-                    <span className={`mt-2 text-xs sm:text-sm font-medium ${
-                      step >= s.num ? 'text-[var(--primary)]' : 'text-gray-500'
+                    <span className={`mt-1.5 text-xs font-medium ${
+                      step >= s.num ? 'text-[var(--primary)]' : 'text-gray-400'
                     }`}>
                       {s.label}
                     </span>
                   </div>
                   {idx < 3 && (
-                    <div className={`h-1 flex-1 mx-2 rounded transition-all duration-300 ${
-                      step > s.num ? 'bg-gradient-to-r from-[var(--primary)] to-blue-600' : 'bg-gray-200'
+                    <div className={`h-0.5 flex-1 mx-2 rounded transition-all duration-300 ${
+                      step > s.num ? 'bg-[var(--primary)]' : 'bg-gray-200'
                     }`} />
                   )}
                 </div>
@@ -448,14 +447,16 @@ export default function Membership() {
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.3 }}
-              className="bg-white rounded-2xl shadow-xl p-8"
+              className="bg-white rounded-lg shadow-sm border border-gray-200"
             >
-            <div>
-              <h3 className="text-2xl font-bold text-[var(--primary)] mb-6 flex items-center gap-2">
-                <span className="text-3xl">👤</span>
+            <div className="px-5 py-3 bg-blue-50 border-b border-blue-100">
+              <h3 className="text-base font-semibold text-[var(--primary)] flex items-center gap-2">
+                <span className="text-lg">👤</span>
                 Basic Information
               </h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            </div>
+            <div className="p-5">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <Input 
                 label="Name *" 
                 value={form.name} 
@@ -574,11 +575,11 @@ export default function Membership() {
                 title="Please enter a valid email address"
               />
               </div>
-              <div className="md:col-span-2 flex justify-end gap-3 pt-4">
+              <div className="md:col-span-2 flex justify-end gap-3 pt-4 border-t border-gray-100">
                 <Button 
                   onClick={()=> setStep(2)} 
                   disabled={!isFormValid}
-                  className="px-8"
+                  className="px-6 py-2 text-sm mt-4"
                 >
                   Next Step →
                 </Button>
@@ -593,12 +594,15 @@ export default function Membership() {
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.3 }}
-              className="bg-white rounded-2xl shadow-xl p-8"
+              className="bg-white rounded-lg shadow-sm border border-gray-200"
             >
-              <h3 className="text-2xl font-bold text-[var(--primary)] mb-6 flex items-center gap-2">
-                <span className="text-3xl">📋</span>
+            <div className="px-5 py-3 bg-orange-50 border-b border-orange-100">
+              <h3 className="text-base font-semibold text-[var(--accent)] flex items-center gap-2">
+                <span className="text-lg">📋</span>
                 Personal Details
               </h3>
+            </div>
+            <div className="p-5">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <Input 
                   type="date" 
@@ -685,10 +689,11 @@ export default function Membership() {
                   title="PIN Code must be 6 digits and cannot start with 0"
                 />
               </div>
-              <div className="flex justify-between pt-4">
-                <Button variant="ghost" onClick={()=>setStep(1)}>← Back</Button>
-                <Button onClick={()=>setStep(3)} disabled={!isStep2Valid}>Next Step →</Button>
+              <div className="flex justify-between pt-4 border-t border-gray-100 mt-4">
+                <Button variant="ghost" onClick={()=>setStep(1)} className="text-sm px-4 py-2">← Back</Button>
+                <Button onClick={()=>setStep(3)} disabled={!isStep2Valid} className="text-sm px-6 py-2">Next Step →</Button>
               </div>
+            </div>
             </motion.div>
           )}
 
@@ -698,12 +703,15 @@ export default function Membership() {
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.3 }}
-              className="bg-white rounded-2xl shadow-xl p-8"
+              className="bg-white rounded-lg shadow-sm border border-gray-200"
             >
-              <h3 className="text-2xl font-bold text-[var(--primary)] mb-6 flex items-center gap-2">
-                <span className="text-3xl">💼</span>
+            <div className="px-5 py-3 bg-blue-50 border-b border-blue-100">
+              <h3 className="text-base font-semibold text-[var(--primary)] flex items-center gap-2">
+                <span className="text-lg">💼</span>
                 Professional Details
               </h3>
+            </div>
+            <div className="p-5">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <Input 
                   label="Employee ID" 
@@ -729,8 +737,8 @@ export default function Membership() {
                 />
               </div>
 
-              <div className="mt-6 space-y-4">
-                <h4 className="font-medium text-gray-900">Required Documents</h4>
+              <div className="mt-4 space-y-3 pt-4 border-t border-gray-100">
+                <h4 className="text-sm font-medium text-gray-900">Required Documents</h4>
                 <FileUploader 
                   accept="image/*,.pdf"
                   maxFiles={3}
@@ -739,10 +747,11 @@ export default function Membership() {
                 />
               </div>
 
-              <div className="flex justify-between pt-4">
-                <Button variant="ghost" onClick={()=>setStep(2)}>← Back</Button>
-                <Button onClick={()=>setStep(4)}>Next Step →</Button>
+              <div className="flex justify-between pt-4 border-t border-gray-100 mt-4">
+                <Button variant="ghost" onClick={()=>setStep(2)} className="text-sm px-4 py-2">← Back</Button>
+                <Button onClick={()=>setStep(4)} className="text-sm px-6 py-2">Next Step →</Button>
               </div>
+            </div>
             </motion.div>
           )}
 
@@ -752,18 +761,21 @@ export default function Membership() {
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.3 }}
-              className="bg-white rounded-2xl shadow-xl p-8"
+              className="bg-white rounded-lg shadow-sm border border-gray-200"
             >
-              <h3 className="text-2xl font-bold text-[var(--primary)] mb-6 flex items-center gap-2">
-                <span className="text-3xl">💳</span>
+            <div className="px-5 py-3 bg-orange-50 border-b border-orange-100">
+              <h3 className="text-base font-semibold text-[var(--accent)] flex items-center gap-2">
+                <span className="text-lg">💳</span>
                 Payment
               </h3>
-              <div className="space-y-6">
-              <div className="rounded-lg border-2 border-gray-200 bg-gray-50 p-6">
-                <h4 className="text-lg font-semibold text-gray-900 mb-4">Payment Method</h4>
-                <div className="grid gap-3 sm:grid-cols-2">
+            </div>
+            <div className="p-5">
+              <div className="space-y-4">
+              <div className="rounded border border-gray-200 bg-gray-50 p-4">
+                <h4 className="text-sm font-semibold text-gray-900 mb-3">Payment Method</h4>
+                <div className="grid gap-2.5 sm:grid-cols-2">
                   {(['upi', 'qr', 'card', 'netbanking'] as const).map((method) => (
-                    <label key={method} className="relative flex cursor-pointer rounded-lg border bg-white p-4 shadow-sm focus:outline-none">
+                    <label key={method} className="relative flex cursor-pointer rounded border bg-white p-3 shadow-sm hover:border-[var(--primary)] transition-colors focus:outline-none">
                       <input
                         type="radio"
                         name="payment"
@@ -773,8 +785,8 @@ export default function Membership() {
                       />
                       <div className="flex flex-1">
                         <div className="flex flex-col">
-                          <span className="block text-sm font-medium text-gray-900 capitalize">{method}</span>
-                          <span className="mt-1 flex items-center text-sm text-gray-500">
+                          <span className="block text-xs font-semibold text-gray-900 capitalize">{method}</span>
+                          <span className="mt-0.5 flex items-center text-xs text-gray-500">
                             {method === 'upi' && 'Pay using UPI apps'}
                             {method === 'qr' && 'Scan QR code to pay'}
                             {method === 'card' && 'Credit/Debit card'}
@@ -783,8 +795,8 @@ export default function Membership() {
                         </div>
                       </div>
                       <div
-                        className={`absolute -inset-px rounded-lg border-2 pointer-events-none ${
-                          form.paymentMethod === method ? 'border-gray-500' : 'border-transparent'
+                        className={`absolute -inset-px rounded border-2 pointer-events-none ${
+                          form.paymentMethod === method ? 'border-[var(--primary)]' : 'border-transparent'
                         }`}
                         aria-hidden="true"
                       />
@@ -793,37 +805,38 @@ export default function Membership() {
                 </div>
               </div>
 
-              <div className="rounded-md border bg-white p-6">
-                <h3 className="text-lg font-medium text-gray-900 mb-4">Payment Summary</h3>
-                <div className="space-y-3">
+              <div className="rounded border border-gray-200 bg-white p-4">
+                <h3 className="text-sm font-semibold text-gray-900 mb-3">Payment Summary</h3>
+                <div className="space-y-2">
                   <div className="flex justify-between text-sm">
-                    <span className="text-gray-500">Membership Type</span>
+                    <span className="text-gray-600">Membership Type</span>
                     <span className="font-medium text-gray-900 capitalize">{form.type}</span>
                   </div>
                   <div className="flex justify-between text-sm">
-                    <span className="text-gray-500">Duration</span>
+                    <span className="text-gray-600">Duration</span>
                     <span className="font-medium text-gray-900">{form.type === 'lifetime' ? 'Lifetime' : '1 year'}</span>
                   </div>
                   <div className="flex justify-between text-sm">
-                    <span className="text-gray-500">Amount</span>
+                    <span className="text-gray-600">Amount</span>
                     <span className="font-medium text-gray-900">₹{form.paymentAmount}</span>
                   </div>
-                  <div className="pt-3 border-t">
+                  <div className="pt-2 border-t border-gray-200">
                     <div className="flex justify-between">
-                      <span className="text-base font-medium text-gray-900">Total Amount</span>
-                      <span className="text-base font-medium text-gray-900">₹{form.paymentAmount}</span>
+                      <span className="text-sm font-semibold text-gray-900">Total Amount</span>
+                      <span className="text-sm font-semibold text-[var(--primary)]">₹{form.paymentAmount}</span>
                     </div>
                   </div>
                 </div>
               </div>
 
-              <div className="flex justify-between pt-4">
-                <Button variant="ghost" onClick={()=>setStep(3)}>← Back</Button>
-                <Button onClick={submit} disabled={submitting} loading={submitting}>
+              <div className="flex justify-between pt-4 border-t border-gray-100">
+                <Button variant="ghost" onClick={()=>setStep(3)} className="text-sm px-4 py-2">← Back</Button>
+                <Button onClick={submit} disabled={submitting} loading={submitting} className="text-sm px-6 py-2">
                   {submitting ? 'Processing...' : `Pay ₹${form.paymentAmount}`}
                 </Button>
               </div>
               </div>
+            </div>
             </motion.div>
           )}
         </div>

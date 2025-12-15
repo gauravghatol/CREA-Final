@@ -37,12 +37,12 @@ function AdvertisementCarousel({ advertisements }: { advertisements: Advertiseme
       className="bg-white rounded-lg shadow-xl overflow-hidden"
     >
       {/* Header */}
-      <div className="px-6 py-3 bg-teal-50 border-b border-teal-100">
+      <div className="px-6 py-3 bg-blue-50 border-b border-blue-100">
         <div className="flex items-center gap-2">
-          <svg className="w-5 h-5 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg className="w-5 h-5 text-[var(--primary)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z" />
           </svg>
-          <h2 className="text-base font-semibold text-teal-900">Latest Announcements</h2>
+          <h2 className="text-base font-semibold text-[var(--primary)]">Latest Announcements</h2>
         </div>
       </div>
 
@@ -419,7 +419,7 @@ export default function Dashboard() {
         className="bg-white rounded-lg shadow-sm border border-gray-200"
       >
         <div className="px-5 py-3 bg-blue-50 border-b border-blue-100">
-          <h2 className="text-base font-semibold text-blue-900">Division-wise Member Count</h2>
+          <h2 className="text-base font-semibold text-[var(--primary)]">Division-wise Member Count</h2>
         </div>
         
         <div className="p-5">
@@ -448,8 +448,8 @@ export default function Dashboard() {
           transition={{ delay: 1.1, duration: 0.5 }}
           className="bg-white rounded-lg shadow-sm border border-gray-200"
         >
-          <div className="px-5 py-3 bg-purple-50 border-b border-purple-100">
-            <h2 className="text-base font-semibold text-purple-900">Recent Achievements</h2>
+          <div className="px-5 py-3 bg-orange-50 border-b border-orange-100">
+            <h2 className="text-base font-semibold text-orange-900">Recent Achievements</h2>
           </div>
           
           <div className="p-5">
@@ -521,12 +521,12 @@ export default function Dashboard() {
           transition={{ delay: 1.2, duration: 0.5 }}
           className="bg-white rounded-lg shadow border border-gray-200"
         >
-          <div className="px-4 py-3 bg-green-50 border-b border-green-100">
+          <div className="px-4 py-3 bg-blue-50 border-b border-blue-100">
             <div className="flex items-center gap-2">
-              <svg className="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-5 h-5 text-[var(--primary)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7" />
               </svg>
-              <h2 className="text-base font-semibold text-green-900">Member Benefits</h2>
+              <h2 className="text-base font-semibold text-[var(--primary)]">Member Benefits</h2>
             </div>
           </div>
           
@@ -566,10 +566,10 @@ export default function Dashboard() {
         >
           <div className="px-4 py-3 bg-orange-50 border-b border-orange-100">
             <div className="flex items-center gap-2">
-              <svg className="w-5 h-5 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-5 h-5 text-[var(--accent)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
               </svg>
-              <h2 className="text-base font-semibold text-orange-900">Why Join CREA?</h2>
+              <h2 className="text-base font-semibold text-[var(--accent)]">Why Join CREA?</h2>
             </div>
           </div>
           
@@ -660,8 +660,8 @@ export default function Dashboard() {
             transition={{ delay: 1.3, duration: 0.5 }}
             className="bg-white rounded-lg shadow-sm border border-gray-200"
           >
-            <div className="px-5 py-3 bg-indigo-50 border-b border-indigo-100">
-              <h2 className="text-base font-semibold text-indigo-900">What's New</h2>
+            <div className="px-5 py-3 bg-blue-50 border-b border-blue-100">
+              <h2 className="text-base font-semibold text-[var(--primary)]">What's New</h2>
             </div>
             
             <div className="p-5">
@@ -770,12 +770,12 @@ export default function Dashboard() {
             transition={{ delay: 1.3, duration: 0.5 }}
             className="bg-white rounded-lg overflow-hidden shadow border border-gray-200"
           >
-            <div className="px-4 py-3 bg-cyan-50 border-b border-cyan-100">
+            <div className="px-4 py-3 bg-orange-50 border-b border-orange-100">
               <div className="flex items-center gap-2">
-                <svg className="w-5 h-5 text-cyan-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-5 h-5 text-[var(--accent)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
                 </svg>
-                <h3 className="text-base font-semibold text-cyan-900">Quick Actions</h3>
+                <h3 className="text-base font-semibold text-[var(--accent)]">Quick Actions</h3>
               </div>
             </div>
             
