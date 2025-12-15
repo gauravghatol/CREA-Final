@@ -16,7 +16,9 @@ import type {
   ExternalLinkCategory,
   Advertisement,
   Achievement,
-  Donation
+  Donation,
+  PendingForumPost,
+  PendingForumComment
 } from '../types'
 
 // Base URL for backend API
@@ -336,7 +338,7 @@ type ForumTopicDTO = { _id: string; title: string; author: string; createdAt: st
 export async function getForumTopics(category?: string): Promise<ForumTopic[]> {
   const queryParam = category && category !== 'all' ? `?category=${category}` : ''
   const list = await request<ForumTopicDTO[]>(`/api/forum/topics${queryParam}`)
-  return list.map(t => ({ id: t._id, title: t.title, author: t.author, createdAt: t.createdAtStr || new Date(t.createdAt).toISOString(), replies: t.replies ?? 0, category: t.category as any }))
+  return list.map(t => ({ id: t._id, title: t.title, author: t.author, createdAt: t.createdAtStr || new Date(t.createdAt).toISOString(), replies: t.replies ?? 0, category: t.category as 'technical' | 'social' | 'organizational' | 'general' | undefined }))
 }
 type ForumPostDTO = { _id: string; author: string; content: string; createdAt: string; createdAtStr?: string; likesCount?: number; comments?: Array<{ author: string; content: string; createdAtStr?: string }> }
 export async function getForumPosts(topicId: string): Promise<ForumPost[]> {
@@ -377,11 +379,11 @@ export async function deletePostComment(topicId: string, postId: string, comment
 
 export async function createForumTopic(input: Omit<ForumTopic, 'id' | 'replies' | 'createdAt'> & { createdAt?: string; replies?: number }): Promise<ForumTopic> {
   const t = await request<ForumTopicDTO>('/api/forum/topics', { method: 'POST', body: JSON.stringify(input) })
-  return { id: t._id, title: t.title, author: t.author, createdAt: t.createdAtStr || new Date(t.createdAt).toISOString(), replies: t.replies ?? 0, category: t.category as any }
+  return { id: t._id, title: t.title, author: t.author, createdAt: t.createdAtStr || new Date(t.createdAt).toISOString(), replies: t.replies ?? 0, category: t.category as 'technical' | 'social' | 'organizational' | 'general' | undefined }
 }
 export async function updateForumTopic(id: string, patch: Partial<ForumTopic>): Promise<ForumTopic> {
   const t = await request<ForumTopicDTO>(`/api/forum/topics/${id}`, { method: 'PUT', body: JSON.stringify(patch) })
-  return { id: t._id, title: t.title, author: t.author, createdAt: t.createdAtStr || new Date(t.createdAt).toISOString(), replies: t.replies ?? 0, category: t.category as any }
+  return { id: t._id, title: t.title, author: t.author, createdAt: t.createdAtStr || new Date(t.createdAt).toISOString(), replies: t.replies ?? 0, category: t.category as 'technical' | 'social' | 'organizational' | 'general' | undefined }
 }
 export async function deleteForumTopic(id: string): Promise<{ success: boolean }> {
   await request(`/api/forum/topics/${id}`, { method: 'DELETE' })
@@ -389,28 +391,6 @@ export async function deleteForumTopic(id: string): Promise<{ success: boolean }
 }
 
 // Forum Approval (Admin)
-export type PendingForumPost = {
-  _id: string
-  topicId: string
-  topicTitle: string
-  author: string
-  content: string
-  createdAt: string
-  createdAtStr?: string
-  approved: boolean
-}
-
-export type PendingForumComment = {
-  postId: string
-  topicId: string
-  topicTitle: string
-  postContent: string
-  commentIndex: number
-  author: string
-  content: string
-  createdAt: string
-}
-
 export async function getPendingForumPosts(): Promise<PendingForumPost[]> {
   return await request<PendingForumPost[]>('/api/forum/admin/pending-posts')
 }
@@ -448,7 +428,7 @@ export type Notification = {
   message: string
   link?: string
   read: boolean
-  metadata?: any
+  metadata?: Record<string, unknown>
   createdAt: string
   updatedAt: string
 }
@@ -554,7 +534,7 @@ export type BulkUploadResult = {
   email?: string
   validFrom?: string
   validUntil?: string
-  data?: any
+  data?: Record<string, unknown>
   error?: string
 }
 
@@ -860,7 +840,7 @@ export async function deleteExternalLink(id: string): Promise<{ success: boolean
 // Settings
 export interface Setting {
   key: string
-  value: any
+  value: string | number | boolean | Record<string, unknown>
   description?: string
   category?: string
 }

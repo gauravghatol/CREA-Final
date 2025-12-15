@@ -15,7 +15,7 @@ import { defaultTimelineStops, defaultPastEvents, type TimelineStop, type PastEv
 
 export default function Admin() {
   usePageTitle('CREA • Admin')
-  const [tab, setTab] = useState<'events'|'documents'|'forum'|'suggestions'|'members'|'settings'|'about'|'transfers'|'association-body'|'donations'|'advertisements'|'achievements'>('events')
+  const [tab, setTab] = useState<'events'|'documents'|'forum'|'forum-approval'|'suggestions'|'members'|'settings'|'about'|'transfers'|'association-body'|'donations'|'advertisements'|'achievements'>('events')
   const [events, setEvents] = useState<EventItem[]>([])
   const [manuals, setManuals] = useState<Manual[]>([])
   const [circulars, setCirculars] = useState<Circular[]>([])
@@ -242,7 +242,7 @@ export default function Admin() {
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
           >
-            {k === 'settings' ? 'Membership' : k === 'transfers' ? 'Mutual Transfers' : k === 'forum-approval' ? 'Forum Moderation' : k.split('-').map(word => word[0].toUpperCase() + word.slice(1)).join(' ')}
+            {k === 'settings' ? 'Membership' : k === 'transfers' ? 'Mutual Transfers' : k.split('-').map(word => word[0].toUpperCase() + word.slice(1)).join(' ')}
           </motion.button>
         ))}
         <motion.button 
@@ -964,7 +964,7 @@ function EventsAdmin({ data, onChange }: { data: EventItem[]; onChange: (d: Even
       await Promise.all(Array.from(selected).map(id => deleteEvent(id)))
       onChange(data.filter(e => !selected.has(e.id)))
       setSelected(new Set())
-    } catch (error) {
+    } catch {
       alert('Error deleting events')
     } finally {
       setDeleting(false)
@@ -1315,7 +1315,7 @@ function DocumentsAdmin({
       await Promise.all(Array.from(selectedCirculars).map(id => deleteCircular(id)))
       onCircularsChange(circulars.filter(c => !selectedCirculars.has(c.id)))
       setSelectedCirculars(new Set())
-    } catch (error) {
+    } catch {
       alert('Error deleting circulars')
     } finally {
       setDeletingCirculars(false)
@@ -1341,7 +1341,7 @@ function DocumentsAdmin({
       await Promise.all(Array.from(selectedManuals).map(id => deleteManual(id)))
       onManualsChange(manuals.filter(m => !selectedManuals.has(m.id)))
       setSelectedManuals(new Set())
-    } catch (error) {
+    } catch {
       alert('Error deleting manuals')
     } finally {
       setDeletingManuals(false)
@@ -1367,7 +1367,7 @@ function DocumentsAdmin({
       await Promise.all(Array.from(selectedCases).map(id => deleteCourtCase(id)))
       onCourtCasesChange(courtCases.filter(c => !selectedCases.has(c.id)))
       setSelectedCases(new Set())
-    } catch (error) {
+    } catch {
       alert('Error deleting court cases')
     } finally {
       setDeletingCases(false)
@@ -1770,240 +1770,6 @@ function DocumentsAdmin({
   )
 }
 
-// Keep old functions for backward compatibility but they're no longer used
-function ManualsAdmin({ data, onChange }: { data: Manual[]; onChange: (d: Manual[])=>void }){
-  const [title, setTitle] = useState('')
-  const [url, setUrl] = useState('')
-  const [file, setFile] = useState<File | null>(null)
-  const [selectMode, setSelectMode] = useState(false)
-  const [selected, setSelected] = useState<Set<string>>(new Set())
-  const [deleting, setDeleting] = useState(false)
-  
-  const toggleSelect = (id: string) => {
-    const newSelected = new Set(selected)
-    if (newSelected.has(id)) newSelected.delete(id)
-    else newSelected.add(id)
-    setSelected(newSelected)
-  }
-
-  const toggleSelectAll = () => {
-    setSelected(selected.size === data.length ? new Set() : new Set(data.map(m => m.id)))
-  }
-
-  const deleteSelected = async () => {
-    if (selected.size === 0 || !confirm(`Delete ${selected.size} selected manual(s)?`)) return
-    setDeleting(true)
-    try {
-      await Promise.all(Array.from(selected).map(id => deleteManual(id)))
-      onChange(data.filter(m => !selected.has(m.id)))
-      setSelected(new Set())
-    } catch (error) {
-      alert('Error deleting manuals')
-    } finally {
-      setDeleting(false)
-    }
-  }
-  return (
-    <div className="space-y-5">
-      <motion.div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
-        <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
-          <span className="w-8 h-8 bg-orange-100 rounded-lg flex items-center justify-center">
-            <svg className="w-4 h-4 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" /></svg>
-          </span>
-          Add New Manual
-        </h3>
-        <div className="space-y-4">
-          <Input label="Title" value={title} onChange={(e)=>setTitle(e.target.value)} />
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <Input label="URL (optional)" value={url} onChange={(e)=>setUrl(e.target.value)} />
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">File (PDF or Image)</label>
-              <input type="file" accept="application/pdf,image/*" className="block w-full text-sm text-gray-600 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100" onChange={(e)=>setFile(e.target.files?.[0] || null)} />
-              <div className="text-xs text-gray-500 mt-1">Provide either a URL or upload a file.</div>
-            </div>
-          </div>
-          <Button onClick={async()=>{
-            const m = await createManual({ title, url, file: file || undefined });
-            onChange([...data, m]);
-            setTitle(''); setUrl(''); setFile(null);
-          }}>Add Manual</Button>
-        </div>
-      </motion.div>
-      <motion.div className="rounded-xl border border-gray-200 bg-white shadow-sm overflow-hidden" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
-        <div className="bg-gradient-to-r from-gray-50 to-gray-100 px-6 py-4 border-b border-gray-200 flex items-center justify-between">
-          <h3 className="text-lg font-semibold text-gray-800">Existing Manuals ({data.length})</h3>
-          <div className="flex items-center gap-3">
-            {selectMode ? (
-              <>
-                {data.length > 0 && (
-                  <label className="flex items-center gap-2 text-sm text-gray-600 cursor-pointer hover:text-gray-900">
-                    <input
-                      type="checkbox"
-                      checked={data.length > 0 && selected.size === data.length}
-                      onChange={toggleSelectAll}
-                      className="w-4 h-4 rounded border-gray-300 text-blue-600 focus:ring-2 focus:ring-blue-500"
-                    />
-                    Select All
-                  </label>
-                )}
-                {selected.size > 0 && (
-                  <button
-                    onClick={deleteSelected}
-                    disabled={deleting}
-                    className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 disabled:opacity-50 font-semibold transition-colors text-sm"
-                  >
-                    {deleting ? 'Deleting...' : `Delete ${selected.size} Selected`}
-                  </button>
-                )}
-                <Button variant="secondary" onClick={() => { setSelectMode(false); setSelected(new Set()); }}>Cancel</Button>
-              </>
-            ) : (
-              data.length > 0 && <Button variant="secondary" onClick={() => setSelectMode(true)}>Select</Button>
-            )}
-          </div>
-        </div>
-        <div className="divide-y divide-gray-100">
-          {data.map(m=> (
-            <div key={m.id} className={`p-5 flex items-center gap-4 hover:bg-gray-50 transition-colors ${selected.has(m.id) ? 'bg-blue-50' : ''}`}>
-              {selectMode && (
-                <input
-                  type="checkbox"
-                  checked={selected.has(m.id)}
-                  onChange={() => toggleSelect(m.id)}
-                  className="w-4 h-4 rounded border-gray-300 text-blue-600 focus:ring-2 focus:ring-blue-500"
-                />
-              )}
-              <div className="flex-1">
-                <div className="font-semibold text-gray-800">{m.title}</div>
-                {m.url && <div className="text-sm text-[var(--primary)] mt-1"><a className="underline hover:text-[var(--accent)]" href={m.url} target="_blank" rel="noreferrer">View Document →</a></div>}
-              </div>
-            </div>
-          ))}
-          {data.length===0 && <div className="p-8 text-center text-gray-500">No manuals found. Add your first manual above.</div>}
-        </div>
-      </motion.div>
-    </div>
-  )
-}
-
-function CircularsAdmin({ data, onChange }: { data: Circular[]; onChange: (d: Circular[])=>void }){
-  const [boardNumber, setBoardNumber] = useState('')
-  const [subject, setSubject] = useState('')
-  const [dateOfIssue, setDateOfIssue] = useState('')
-  const [url, setUrl] = useState('')
-  const [file, setFile] = useState<File | null>(null)
-  const [selectMode, setSelectMode] = useState(false)
-  const [selected, setSelected] = useState<Set<string>>(new Set())
-  const [deleting, setDeleting] = useState(false)
-  
-  const toggleSelect = (id: string) => {
-    const newSelected = new Set(selected)
-    if (newSelected.has(id)) newSelected.delete(id)
-    else newSelected.add(id)
-    setSelected(newSelected)
-  }
-
-  const toggleSelectAll = () => {
-    setSelected(selected.size === data.length ? new Set() : new Set(data.map(c => c.id)))
-  }
-
-  const deleteSelected = async () => {
-    if (selected.size === 0 || !confirm(`Delete ${selected.size} selected circular(s)?`)) return
-    setDeleting(true)
-    try {
-      await Promise.all(Array.from(selected).map(id => deleteCircular(id)))
-      onChange(data.filter(c => !selected.has(c.id)))
-      setSelected(new Set())
-    } catch (error) {
-      alert('Error deleting circulars')
-    } finally {
-      setDeleting(false)
-    }
-  }
-  return (
-    <div className="space-y-5">
-      <motion.div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
-        <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
-          <span className="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center">
-            <svg className="w-4 h-4 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
-          </span>
-          Add New Circular
-        </h3>
-        <div className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <Input label="Board Number" value={boardNumber} onChange={(e)=>setBoardNumber(e.target.value)} />
-            <Input label="Date of Issue" type="date" value={dateOfIssue} onChange={(e)=>setDateOfIssue(e.target.value)} />
-          </div>
-          <Input label="Subject" value={subject} onChange={(e)=>setSubject(e.target.value)} />
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <Input label="URL (optional)" value={url} onChange={(e)=>setUrl(e.target.value)} />
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">File (PDF or Image)</label>
-              <input type="file" accept="application/pdf,image/*" className="block w-full text-sm text-gray-600 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-purple-50 file:text-purple-700 hover:file:bg-purple-100" onChange={(e)=>setFile(e.target.files?.[0] || null)} />
-              <div className="text-xs text-gray-500 mt-1">Provide either a URL or upload a file.</div>
-            </div>
-          </div>
-          <Button onClick={async()=>{ const c = await createCircular({ boardNumber, subject, dateOfIssue, url, file: file || undefined }); onChange([...data, c]); setBoardNumber(''); setSubject(''); setDateOfIssue(''); setUrl(''); setFile(null) }}>Add Circular</Button>
-        </div>
-      </motion.div>
-      <motion.div className="rounded-xl border border-gray-200 bg-white shadow-sm overflow-hidden" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
-        <div className="bg-gradient-to-r from-gray-50 to-gray-100 px-6 py-4 border-b border-gray-200 flex items-center justify-between">
-          <h3 className="text-lg font-semibold text-gray-800">Existing Circulars ({data.length})</h3>
-          <div className="flex items-center gap-3">
-            {selectMode ? (
-              <>
-                {data.length > 0 && (
-                  <label className="flex items-center gap-2 text-sm text-gray-600 cursor-pointer hover:text-gray-900">
-                    <input
-                      type="checkbox"
-                      checked={data.length > 0 && selected.size === data.length}
-                      onChange={toggleSelectAll}
-                      className="w-4 h-4 rounded border-gray-300 text-blue-600 focus:ring-2 focus:ring-blue-500"
-                    />
-                    Select All
-                  </label>
-                )}
-                {selected.size > 0 && (
-                  <button
-                    onClick={deleteSelected}
-                    disabled={deleting}
-                    className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 disabled:opacity-50 font-semibold transition-colors text-sm"
-                  >
-                    {deleting ? 'Deleting...' : `Delete ${selected.size} Selected`}
-                  </button>
-                )}
-                <Button variant="secondary" onClick={() => { setSelectMode(false); setSelected(new Set()); }}>Cancel</Button>
-              </>
-            ) : (
-              data.length > 0 && <Button variant="secondary" onClick={() => setSelectMode(true)}>Select</Button>
-            )}
-          </div>
-        </div>
-        <div className="divide-y divide-gray-100">
-          {data.map(c=> (
-            <div key={c.id} className={`p-5 flex items-center gap-4 hover:bg-gray-50 transition-colors ${selected.has(c.id) ? 'bg-blue-50' : ''}`}>
-              {selectMode && (
-                <input
-                  type="checkbox"
-                  checked={selected.has(c.id)}
-                  onChange={() => toggleSelect(c.id)}
-                  className="w-4 h-4 rounded border-gray-300 text-blue-600 focus:ring-2 focus:ring-blue-500"
-                />
-              )}
-              <div className="flex-1">
-                <div className="font-semibold text-gray-800">{c.subject}</div>
-                <div className="text-sm text-gray-600 mt-1">{c.boardNumber} • {c.dateOfIssue}</div>
-                {c.url && <div className="text-sm text-[var(--primary)] mt-1"><a className="underline hover:text-[var(--accent)]" href={c.url} target="_blank" rel="noreferrer">View Document →</a></div>}
-              </div>
-            </div>
-          ))}
-          {data.length===0 && <div className="p-8 text-center text-gray-500">No circulars found. Add your first circular above.</div>}
-        </div>
-      </motion.div>
-    </div>
-  )
-}
-
 function ForumAdmin({ data, onChange }: { data: ForumTopic[]; onChange: (d: ForumTopic[])=>void }){
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('Admin')
@@ -2039,7 +1805,7 @@ function ForumAdmin({ data, onChange }: { data: ForumTopic[]; onChange: (d: Foru
       await Promise.all(Array.from(selected).map(id => deleteForumTopic(id)))
       onChange(data.filter(t => !selected.has(t.id)))
       setSelected(new Set())
-    } catch (error) {
+    } catch {
       alert('Error deleting topics')
     } finally {
       setDeleting(false)
@@ -2063,7 +1829,7 @@ function ForumAdmin({ data, onChange }: { data: ForumTopic[]; onChange: (d: Foru
       onChange(data.map(t => t.id === editingId ? updated : t))
       setEditingId(null)
       setEditTitle('')
-    } catch (error) {
+    } catch {
       alert('Error updating topic')
     }
   }
@@ -2084,7 +1850,7 @@ function ForumAdmin({ data, onChange }: { data: ForumTopic[]; onChange: (d: Foru
             <label className="block text-sm font-medium text-gray-700 mb-2">Category</label>
             <select 
               value={category} 
-              onChange={(e)=>setCategory(e.target.value as any)}
+              onChange={(e)=>setCategory(e.target.value as 'technical' | 'social' | 'organizational' | 'general')}
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--primary)] focus:border-transparent"
             >
               <option value="general">General</option>
@@ -2208,113 +1974,6 @@ function ForumAdmin({ data, onChange }: { data: ForumTopic[]; onChange: (d: Foru
   )
 }
 
-function CourtCasesAdmin({ data, onChange }: { data: CourtCase[]; onChange: (d: CourtCase[])=>void }){
-  const [caseNumber, setCaseNumber] = useState('')
-  const [date, setDate] = useState('')
-  const [subject, setSubject] = useState('')
-  const [selectMode, setSelectMode] = useState(false)
-  const [selected, setSelected] = useState<Set<string>>(new Set())
-  const [deleting, setDeleting] = useState(false)
-  
-  const toggleSelect = (id: string) => {
-    const newSelected = new Set(selected)
-    if (newSelected.has(id)) newSelected.delete(id)
-    else newSelected.add(id)
-    setSelected(newSelected)
-  }
-
-  const toggleSelectAll = () => {
-    setSelected(selected.size === data.length ? new Set() : new Set(data.map(c => c.id)))
-  }
-
-  const deleteSelected = async () => {
-    if (selected.size === 0 || !confirm(`Delete ${selected.size} selected court case(s)?`)) return
-    setDeleting(true)
-    try {
-      await Promise.all(Array.from(selected).map(id => deleteCourtCase(id)))
-      onChange(data.filter(c => !selected.has(c.id)))
-      setSelected(new Set())
-    } catch (error) {
-      alert('Error deleting court cases')
-    } finally {
-      setDeleting(false)
-    }
-  }
-  return (
-    <div className="space-y-5">
-      <motion.div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
-        <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
-          <span className="w-8 h-8 bg-red-100 rounded-lg flex items-center justify-center">
-            <svg className="w-4 h-4 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3" /></svg>
-          </span>
-          Add New Court Case
-        </h3>
-        <div className="space-y-4">
-          <Input label="Case Number" value={caseNumber} onChange={(e)=>setCaseNumber(e.target.value)} />
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <Input label="Date" type="date" value={date} onChange={(e)=>setDate(e.target.value)} />
-            <Input label="Subject" value={subject} onChange={(e)=>setSubject(e.target.value)} />
-          </div>
-          <Button onClick={async()=>{ const cc = await createCourtCase({ caseNumber, date, subject }); onChange([cc, ...data]); setCaseNumber(''); setDate(''); setSubject('') }}>Add Case</Button>
-        </div>
-      </motion.div>
-      <motion.div className="rounded-xl border border-gray-200 bg-white shadow-sm overflow-hidden" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
-        <div className="bg-gradient-to-r from-gray-50 to-gray-100 px-6 py-4 border-b border-gray-200 flex items-center justify-between">
-          <h3 className="text-lg font-semibold text-gray-800">Existing Court Cases ({data.length})</h3>
-          <div className="flex items-center gap-3">
-            {selectMode ? (
-              <>
-                {data.length > 0 && (
-                  <label className="flex items-center gap-2 text-sm text-gray-600 cursor-pointer hover:text-gray-900">
-                    <input
-                      type="checkbox"
-                      checked={data.length > 0 && selected.size === data.length}
-                      onChange={toggleSelectAll}
-                      className="w-4 h-4 rounded border-gray-300 text-blue-600 focus:ring-2 focus:ring-blue-500"
-                    />
-                    Select All
-                  </label>
-                )}
-                {selected.size > 0 && (
-                  <button
-                    onClick={deleteSelected}
-                    disabled={deleting}
-                    className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 disabled:opacity-50 font-semibold transition-colors text-sm"
-                  >
-                    {deleting ? 'Deleting...' : `Delete ${selected.size} Selected`}
-                  </button>
-                )}
-                <Button variant="secondary" onClick={() => { setSelectMode(false); setSelected(new Set()); }}>Cancel</Button>
-              </>
-            ) : (
-              data.length > 0 && <Button variant="secondary" onClick={() => setSelectMode(true)}>Select</Button>
-            )}
-          </div>
-        </div>
-        <div className="divide-y divide-gray-100">
-          {data.map(c => (
-            <div key={c.id} className={`p-5 flex items-center gap-4 hover:bg-gray-50 transition-colors ${selected.has(c.id) ? 'bg-blue-50' : ''}`}>
-              {selectMode && (
-                <input
-                  type="checkbox"
-                  checked={selected.has(c.id)}
-                  onChange={() => toggleSelect(c.id)}
-                  className="w-4 h-4 rounded border-gray-300 text-blue-600 focus:ring-2 focus:ring-blue-500"
-                />
-              )}
-              <div className="flex-1">
-                <div className="font-semibold text-gray-800">{c.caseNumber}</div>
-                <div className="text-sm text-gray-600 mt-1">{new Date(c.date).toLocaleDateString()} • {c.subject}</div>
-              </div>
-            </div>
-          ))}
-          {data.length===0 && <div className="p-8 text-center text-gray-500">No court cases found. Add your first case above.</div>}
-        </div>
-      </motion.div>
-    </div>
-  )
-}
-
 function SuggestionsAdmin({ data, onChange }: { data: Suggestion[]; onChange: (s: Suggestion[]) => void }){
   const [selectMode, setSelectMode] = useState(false)
   const [selected, setSelected] = useState<Set<string>>(new Set())
@@ -2347,7 +2006,7 @@ function SuggestionsAdmin({ data, onChange }: { data: Suggestion[]; onChange: (s
       await Promise.all(Array.from(selected).map(id => deleteSuggestion(id)))
       onChange(data.filter(s => !selected.has(s.id)))
       setSelected(new Set())
-    } catch (error) {
+    } catch {
       alert('Error deleting suggestions')
     } finally {
       setDeleting(false)
@@ -2485,7 +2144,7 @@ function SettingsAdmin({ data, onChange }: { data: Setting[]; onChange: (s: Sett
     // Initialize editing state with current settings values
     const initialEditing: Record<string, number> = {}
     data.forEach(setting => {
-      initialEditing[setting.key] = setting.value
+      initialEditing[setting.key] = typeof setting.value === 'number' ? setting.value : Number(setting.value)
     })
     setEditing(initialEditing)
   }, [data])
@@ -2625,7 +2284,7 @@ function SettingsAdmin({ data, onChange }: { data: Setting[]; onChange: (s: Sett
                     
                     {editing[setting.key] !== setting.value && (
                       <div className="mt-2 text-xs text-gray-500 flex items-center gap-1">
-                        <span>Previous: ₹{setting.value}</span>
+                        <span>Previous: ₹{typeof setting.value === 'number' ? setting.value : String(setting.value)}</span>
                         <span>→</span>
                         <span className="font-bold text-[var(--primary)]">New: ₹{editing[setting.key]}</span>
                       </div>
@@ -3200,7 +2859,7 @@ function AssociationBodyAdmin() {
 function MutualTransfersAdmin({ data, onChange }: { data: MutualTransfer[]; onChange: (data: MutualTransfer[]) => void }) {
   const [openCreate, setOpenCreate] = useState(false)
   const [editingId, setEditingId] = useState<string | null>(null)
-  const [form, setForm] = useState({ post: '', currentLocation: '', desiredLocation: '', contactPhone: '', notes: '' })
+  const [form, setForm] = useState({ post: '', currentLocation: '', desiredLocation: '', desiredDesignation: '', contactPhone: '', notes: '' })
   const [selectMode, setSelectMode] = useState(false)
   const [selected, setSelected] = useState<Set<string>>(new Set())
   const [deleting, setDeleting] = useState(false)
@@ -3223,7 +2882,7 @@ function MutualTransfersAdmin({ data, onChange }: { data: MutualTransfer[]; onCh
       await Promise.all(Array.from(selected).map(id => deleteMutualTransfer(id)))
       onChange(data.filter(t => !selected.has(t.id)))
       setSelected(new Set())
-    } catch (error) {
+    } catch {
       alert('Error deleting transfers')
     } finally {
       setDeleting(false)
@@ -3236,7 +2895,7 @@ function MutualTransfersAdmin({ data, onChange }: { data: MutualTransfer[]; onCh
       const refreshed = await getMutualTransfers({ includeInactive: true })
       onChange(refreshed)
       setOpenCreate(false)
-      setForm({ post: '', currentLocation: '', desiredLocation: '', contactPhone: '', notes: '' })
+      setForm({ post: '', currentLocation: '', desiredLocation: '', desiredDesignation: '', contactPhone: '', notes: '' })
     } catch {
       alert('Error creating transfer')
     }
@@ -3250,7 +2909,7 @@ function MutualTransfersAdmin({ data, onChange }: { data: MutualTransfer[]; onCh
       onChange(refreshed)
       setEditingId(null)
       setOpenCreate(false)
-      setForm({ post: '', currentLocation: '', desiredLocation: '', contactPhone: '', notes: '' })
+      setForm({ post: '', currentLocation: '', desiredLocation: '', desiredDesignation: '', contactPhone: '', notes: '' })
     } catch {
       alert('Error updating transfer')
     }
@@ -3268,7 +2927,14 @@ function MutualTransfersAdmin({ data, onChange }: { data: MutualTransfer[]; onCh
 
   const handleEdit = (item: MutualTransfer) => {
     setEditingId(item.id)
-    setForm({ post: item.post, currentLocation: item.currentLocation, desiredLocation: item.desiredLocation, contactPhone: item.contactPhone, notes: item.notes })
+    setForm({ 
+      post: item.post, 
+      currentLocation: item.currentLocation, 
+      desiredLocation: item.desiredLocation, 
+      desiredDesignation: item.desiredDesignation,
+      contactPhone: item.contactPhone, 
+      notes: item.notes 
+    })
     setOpenCreate(true)
   }
 
@@ -3337,219 +3003,13 @@ function MutualTransfersAdmin({ data, onChange }: { data: MutualTransfer[]; onCh
               <Button onClick={editingId ? handleUpdate : handleCreate} variant="primary">
                 {editingId ? 'Update' : 'Create'}
               </Button>
-              <Button onClick={() => { setOpenCreate(false); setEditingId(null); setForm({ post: '', currentLocation: '', desiredLocation: '', contactPhone: '', notes: '' }) }} variant="secondary">
+              <Button onClick={() => { setOpenCreate(false); setEditingId(null); setForm({ post: '', currentLocation: '', desiredLocation: '', desiredDesignation: '', contactPhone: '', notes: '' }) }} variant="secondary">
                 Cancel
               </Button>
             </div>
           </motion.div>
         </div>
       )}
-    </div>
-  )
-}
-
-function ForumApprovalAdmin({ 
-  pendingPosts, 
-  pendingComments, 
-  onPostsChange, 
-  onCommentsChange 
-}: { 
-  pendingPosts: PendingForumPost[]
-  pendingComments: PendingForumComment[]
-  onPostsChange: (posts: PendingForumPost[]) => void
-  onCommentsChange: (comments: PendingForumComment[]) => void
-}) {
-  const [loading, setLoading] = useState(false)
-
-  const handleApprovePost = async (postId: string) => {
-    setLoading(true)
-    try {
-      await approveForumPost(postId)
-      onPostsChange(pendingPosts.filter(p => p._id !== postId))
-      alert('Post approved successfully!')
-    } catch (error) {
-      alert('Error approving post: ' + (error as Error).message)
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  const handleRejectPost = async (postId: string) => {
-    if (!confirm('Are you sure you want to reject and delete this post?')) return
-    setLoading(true)
-    try {
-      await rejectForumPost(postId)
-      onPostsChange(pendingPosts.filter(p => p._id !== postId))
-      alert('Post rejected and deleted')
-    } catch (error) {
-      alert('Error rejecting post: ' + (error as Error).message)
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  const handleApproveComment = async (postId: string, commentIndex: number) => {
-    setLoading(true)
-    try {
-      await approveForumComment(postId, commentIndex)
-      onCommentsChange(pendingComments.filter(c => !(c.postId === postId && c.commentIndex === commentIndex)))
-      alert('Comment approved successfully!')
-    } catch (error) {
-      alert('Error approving comment: ' + (error as Error).message)
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  const handleRejectComment = async (postId: string, commentIndex: number) => {
-    if (!confirm('Are you sure you want to reject and delete this comment?')) return
-    setLoading(true)
-    try {
-      await rejectForumComment(postId, commentIndex)
-      onCommentsChange(pendingComments.filter(c => !(c.postId === postId && c.commentIndex === commentIndex)))
-      alert('Comment rejected and deleted')
-    } catch (error) {
-      alert('Error rejecting comment: ' + (error as Error).message)
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  return (
-    <div className="space-y-6">
-      <motion.div
-        className="bg-white rounded-xl border border-gray-200 p-6 shadow-md"
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-      >
-        <div className="flex items-center justify-between mb-6">
-          <div>
-            <h2 className="text-2xl font-bold text-gray-900">Forum Moderation</h2>
-            <p className="text-sm text-gray-500 mt-1">Review and approve pending forum posts and comments</p>
-          </div>
-          <div className="flex items-center gap-4">
-            <div className="px-4 py-2 bg-orange-50 border border-orange-200 rounded-lg">
-              <span className="text-sm text-orange-700 font-medium">{pendingPosts.length} Pending Posts</span>
-            </div>
-            <div className="px-4 py-2 bg-blue-50 border border-blue-200 rounded-lg">
-              <span className="text-sm text-blue-700 font-medium">{pendingComments.length} Pending Comments</span>
-            </div>
-          </div>
-        </div>
-
-        {/* Pending Posts Section */}
-        <div className="mb-8">
-          <h3 className="text-xl font-semibold text-gray-800 mb-4 flex items-center gap-2">
-            <svg className="w-5 h-5 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
-            </svg>
-            Pending Posts ({pendingPosts.length})
-          </h3>
-          <div className="space-y-4">
-            {pendingPosts.length === 0 ? (
-              <p className="text-center text-gray-500 py-8 bg-gray-50 rounded-lg">No pending posts</p>
-            ) : (
-              pendingPosts.map(post => (
-                <motion.div
-                  key={post._id}
-                  className="border border-gray-200 rounded-lg p-4 bg-white hover:shadow-md transition-shadow"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                >
-                  <div className="flex items-start justify-between gap-4">
-                    <div className="flex-1">
-                      <div className="flex items-center gap-2 mb-2">
-                        <span className="px-2 py-1 bg-blue-100 text-blue-700 text-xs rounded font-medium">
-                          {post.topicTitle}
-                        </span>
-                        <span className="text-sm text-gray-500">by {post.author}</span>
-                        <span className="text-xs text-gray-400">{new Date(post.createdAt).toLocaleDateString()}</span>
-                      </div>
-                      <p className="text-gray-700 whitespace-pre-wrap">{post.content}</p>
-                    </div>
-                    <div className="flex gap-2">
-                      <Button
-                        onClick={() => handleApprovePost(post._id)}
-                        disabled={loading}
-                        variant="primary"
-                        className="!py-1 !px-3 !text-sm"
-                      >
-                        ✓ Approve
-                      </Button>
-                      <Button
-                        onClick={() => handleRejectPost(post._id)}
-                        disabled={loading}
-                        variant="secondary"
-                        className="!py-1 !px-3 !text-sm !bg-red-50 !text-red-600 hover:!bg-red-100"
-                      >
-                        ✗ Reject
-                      </Button>
-                    </div>
-                  </div>
-                </motion.div>
-              ))
-            )}
-          </div>
-        </div>
-
-        {/* Pending Comments Section */}
-        <div>
-          <h3 className="text-xl font-semibold text-gray-800 mb-4 flex items-center gap-2">
-            <svg className="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z" />
-            </svg>
-            Pending Comments ({pendingComments.length})
-          </h3>
-          <div className="space-y-4">
-            {pendingComments.length === 0 ? (
-              <p className="text-center text-gray-500 py-8 bg-gray-50 rounded-lg">No pending comments</p>
-            ) : (
-              pendingComments.map((comment, idx) => (
-                <motion.div
-                  key={`${comment.postId}-${comment.commentIndex}`}
-                  className="border border-gray-200 rounded-lg p-4 bg-white hover:shadow-md transition-shadow"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                >
-                  <div className="flex items-start justify-between gap-4">
-                    <div className="flex-1">
-                      <div className="flex items-center gap-2 mb-2">
-                        <span className="px-2 py-1 bg-purple-100 text-purple-700 text-xs rounded font-medium">
-                          {comment.topicTitle}
-                        </span>
-                        <span className="text-xs text-gray-400">Comment on: {comment.postContent}</span>
-                      </div>
-                      <div className="flex items-center gap-2 mb-2">
-                        <span className="text-sm text-gray-500">by {comment.author}</span>
-                        <span className="text-xs text-gray-400">{comment.createdAt}</span>
-                      </div>
-                      <p className="text-gray-700 whitespace-pre-wrap">{comment.content}</p>
-                    </div>
-                    <div className="flex gap-2">
-                      <Button
-                        onClick={() => handleApproveComment(comment.postId, comment.commentIndex)}
-                        disabled={loading}
-                        variant="primary"
-                        className="!py-1 !px-3 !text-sm"
-                      >
-                        ✓ Approve
-                      </Button>
-                      <Button
-                        onClick={() => handleRejectComment(comment.postId, comment.commentIndex)}
-                        disabled={loading}
-                        variant="secondary"
-                        className="!py-1 !px-3 !text-sm !bg-red-50 !text-red-600 hover:!bg-red-100"
-                      >
-                        ✗ Reject
-                      </Button>
-                    </div>
-                  </div>
-                </motion.div>
-              ))
-            )}
-          </div>
-        </div>
-      </motion.div>
     </div>
   )
 }
@@ -3951,9 +3411,9 @@ function AdvertisementsAdmin() {
       }
       await loadAdvertisements()
       resetForm()
-    } catch (error: any) {
+    } catch (error) {
       console.error('Error saving advertisement:', error)
-      const message = error?.message || error?.toString() || 'Failed to save advertisement'
+      const message = error instanceof Error ? error.message : String(error)
       alert(`Error: ${message}`)
     }
   }
