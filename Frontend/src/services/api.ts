@@ -15,7 +15,8 @@ import type {
   ExternalLink,
   ExternalLinkCategory,
   Advertisement,
-  Achievement
+  Achievement,
+  Donation
 } from '../types'
 
 // Base URL for backend API
@@ -951,3 +952,32 @@ export async function deleteAchievement(id: string): Promise<void> {
   })
 }
 
+// ==================== DONATIONS ====================
+
+export async function createDonation(data: Partial<Donation>): Promise<Donation> {
+  return await request<Donation>('/api/donations', {
+    method: 'POST',
+    body: JSON.stringify(data)
+  })
+}
+
+export async function getAllDonations(): Promise<Donation[]> {
+  return await request<Donation[]>('/api/donations')
+}
+
+export async function getDonationById(id: string): Promise<Donation> {
+  return await request<Donation>(`/api/donations/${id}`)
+}
+
+export async function updateDonation(id: string, data: Partial<Donation>): Promise<Donation> {
+  return await request<Donation>(`/api/donations/${id}`, {
+    method: 'PUT',
+    body: JSON.stringify(data)
+  })
+}
+
+export async function deleteDonation(id: string): Promise<void> {
+  await request<void>(`/api/donations/${id}`, {
+    method: 'DELETE'
+  })
+}

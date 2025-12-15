@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
-import Calendar from '../components/Calendar'
 import QuickPreviewCard from '../components/QuickPreviewCard'
 import { EventIcon, ForumIcon, CircularIcon, CourtCaseIcon } from '../components/Icons'
 import { StaggerContainer, StaggerItem } from '../components/StaggerAnimation'
@@ -38,12 +37,12 @@ function AdvertisementCarousel({ advertisements }: { advertisements: Advertiseme
       className="bg-white rounded-lg shadow-xl overflow-hidden"
     >
       {/* Header */}
-      <div className="bg-[var(--primary)] px-6 py-4">
-        <div className="flex items-center gap-3">
-          <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <div className="px-6 py-3 bg-teal-50 border-b border-teal-100">
+        <div className="flex items-center gap-2">
+          <svg className="w-5 h-5 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z" />
           </svg>
-          <h2 className="text-2xl font-bold !text-white">Latest Announcements</h2>
+          <h2 className="text-base font-semibold text-teal-900">Latest Announcements</h2>
         </div>
       </div>
 
@@ -380,7 +379,7 @@ export default function Dashboard() {
 
       {/* Breaking News - Scrolling Ticker */}
       {events.filter(e => e.breaking).length > 0 && (
-        <div className="bg-red-600 text-white overflow-hidden relative shadow-md">
+        <div className="bg-white border-l-4 border-red-600 shadow-sm overflow-hidden">
           <style>{`
             @keyframes scroll-left {
               0% { transform: translateX(100%); }
@@ -392,17 +391,17 @@ export default function Dashboard() {
               animation: scroll-left 30s linear infinite;
             }
           `}</style>
-          <div className="flex items-center h-10">
-            <div className="bg-yellow-400 text-red-900 px-4 h-full flex items-center flex-shrink-0">
-              <span className="font-bold text-sm uppercase tracking-wide">Breaking News</span>
+          <div className="flex items-center h-9">
+            <div className="bg-red-600 text-white px-3 h-full flex items-center flex-shrink-0">
+              <span className="font-semibold text-xs uppercase tracking-wide">Latest Updates</span>
             </div>
-            <div className="flex-1 overflow-hidden relative">
+            <div className="flex-1 overflow-hidden relative bg-gray-50">
               <div className="ticker-scroll py-2">
                 {events.filter(e => e.breaking).map((event, idx) => (
-                  <span key={idx} className="inline-flex items-center mx-8">
-                    <span className="font-medium">{event.title}</span>
-                    <span className="mx-2">•</span>
-                    <span className="text-xs opacity-90">{new Date(event.date).toLocaleDateString('en-US', { day: '2-digit', month: 'short', year: 'numeric' })}</span>
+                  <span key={idx} className="inline-flex items-center mx-6 text-gray-800">
+                    <span className="font-medium text-sm">{event.title}</span>
+                    <span className="mx-2 text-gray-400">•</span>
+                    <span className="text-xs text-gray-500">{new Date(event.date).toLocaleDateString('en-US', { day: '2-digit', month: 'short', year: 'numeric' })}</span>
                   </span>
                 ))}
               </div>
@@ -417,32 +416,27 @@ export default function Dashboard() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.7, duration: 0.5 }}
-        className="bg-white rounded-lg shadow-lg overflow-hidden"
+        className="bg-white rounded-lg shadow-sm border border-gray-200"
       >
-        <div className="bg-[var(--primary)] px-6 py-4">
-          <div className="flex items-center gap-3">
-            <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-            </svg>
-            <h2 className="text-2xl font-bold !text-white">Division-wise Member Count</h2>
-          </div>
+        <div className="px-5 py-3 bg-blue-50 border-b border-blue-100">
+          <h2 className="text-base font-semibold text-blue-900">Division-wise Member Count</h2>
         </div>
         
-        <div className="p-6">
-          <StaggerContainer className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
+        <div className="p-5">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
             {counts.map((c, index) => (
-              <StaggerItem key={c.division || `division-${index}`}>
-                <motion.div
-                  whileHover={{ y: -4 }}
-                  className="bg-gray-50 rounded-lg p-5 border-2 border-gray-200 hover:border-[var(--primary)] hover:shadow-lg transition-all"
-                >
-                  <div className="text-sm font-bold text-[var(--primary)] uppercase mb-2">{c.division || 'N/A'}</div>
-                  <div className="text-4xl font-bold text-[var(--primary)] mb-1">{c.count}</div>
-                  <div className="text-sm text-gray-600">Engineers</div>
-                </motion.div>
-              </StaggerItem>
+              <div
+                key={c.division || `division-${index}`}
+                className="bg-gray-50 rounded border border-gray-200 p-3 hover:border-blue-400 hover:bg-blue-50 transition-all"
+              >
+                <div className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">
+                  {c.division || 'N/A'}
+                </div>
+                <div className="text-2xl font-bold text-[var(--primary)]">{c.count}</div>
+                <div className="text-xs text-gray-500 mt-0.5">Members</div>
+              </div>
             ))}
-          </StaggerContainer>
+          </div>
         </div>
       </motion.div>
 
@@ -452,46 +446,33 @@ export default function Dashboard() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 1.1, duration: 0.5 }}
-          className="bg-white rounded-lg shadow-lg overflow-hidden"
+          className="bg-white rounded-lg shadow-sm border border-gray-200"
         >
-          <div className="bg-[var(--primary)] px-6 py-4">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
-                </svg>
-                <h2 className="text-xl font-bold !text-white">Recent Achievements</h2>
-              </div>
-            </div>
+          <div className="px-5 py-3 bg-purple-50 border-b border-purple-100">
+            <h2 className="text-base font-semibold text-purple-900">Recent Achievements</h2>
           </div>
           
-          <div className="p-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {achievements.slice(0, 6).map((achievement, index) => (
-                <motion.div
+          <div className="p-5">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+              {achievements.slice(0, 6).map((achievement) => (
+                <div
                   key={achievement._id}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: index * 0.05 }}
-                  whileHover={{ y: -2, boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}
-                  className="bg-white border border-gray-200 rounded-lg overflow-hidden hover:border-[var(--primary)] transition-all group"
+                  className="bg-gray-50 rounded border border-gray-200 overflow-hidden hover:border-blue-400 hover:bg-blue-50 transition-all group"
                 >
-                  {/* Image - Smaller */}
+                  {/* Image - Compact */}
                   {achievement.imageUrl && (
-                    <div className="relative h-32 overflow-hidden bg-gray-100">
+                    <div className="relative h-24 overflow-hidden bg-gray-100">
                       <img 
                         src={achievement.imageUrl} 
                         alt={achievement.title}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                        className="w-full h-full object-cover"
                       />
-                      {/* Subtle overlay badge */}
-                      <div className="absolute top-2 left-2">
-                        <span className={`inline-flex items-center gap-1 px-2 py-1 rounded text-xs font-medium text-white backdrop-blur-sm ${
-                          achievement.type === 'award' ? 'bg-yellow-500/90' :
-                          achievement.type === 'courtCase' ? 'bg-green-500/90' :
-                          'bg-blue-500/90'
+                      <div className="absolute top-1.5 left-1.5">
+                        <span className={`inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-xs font-medium text-white ${
+                          achievement.type === 'award' ? 'bg-yellow-600' :
+                          achievement.type === 'courtCase' ? 'bg-green-600' :
+                          'bg-blue-600'
                         }`}>
-                          {achievement.type === 'award' ? '🏆' : achievement.type === 'courtCase' ? '⚖️' : '🎉'}
                           <span className="text-[10px] uppercase tracking-wide">
                             {achievement.type === 'courtCase' ? 'Legal' : achievement.type}
                           </span>
@@ -500,9 +481,9 @@ export default function Dashboard() {
                     </div>
                   )}
 
-                  {/* Content - Compact */}
-                  <div className="p-3">
-                    <div className="flex items-center gap-2 mb-2">
+                  {/* Content */}
+                  <div className="p-2.5">
+                    <div className="flex items-center gap-1.5 mb-1.5">
                       <div className="text-xs text-gray-500">
                         {new Date(achievement.date).toLocaleDateString('en-US', { 
                           day: 'numeric', 
@@ -513,18 +494,18 @@ export default function Dashboard() {
                       {achievement.category && (
                         <>
                           <span className="text-gray-300">•</span>
-                          <span className="text-xs text-gray-500">{achievement.category}</span>
+                          <span className="text-xs text-gray-500 truncate">{achievement.category}</span>
                         </>
                       )}
                     </div>
-                    <h3 className="font-semibold text-sm text-gray-900 mb-1 line-clamp-2 leading-tight">
+                    <h3 className="font-semibold text-sm text-gray-900 mb-1 line-clamp-2">
                       {achievement.title}
                     </h3>
-                    <p className="text-gray-600 text-xs line-clamp-2 leading-relaxed">
+                    <p className="text-gray-600 text-xs line-clamp-2">
                       {achievement.description}
                     </p>
                   </div>
-                </motion.div>
+                </div>
               ))}
             </div>
           </div>
@@ -540,12 +521,12 @@ export default function Dashboard() {
           transition={{ delay: 1.2, duration: 0.5 }}
           className="bg-white rounded-lg shadow border border-gray-200"
         >
-          <div className="px-4 py-3 border-b border-gray-200">
+          <div className="px-4 py-3 bg-green-50 border-b border-green-100">
             <div className="flex items-center gap-2">
-              <svg className="w-5 h-5 text-[var(--accent)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7" />
               </svg>
-              <h2 className="text-lg font-semibold text-gray-800">Member Benefits</h2>
+              <h2 className="text-base font-semibold text-green-900">Member Benefits</h2>
             </div>
           </div>
           
@@ -583,12 +564,12 @@ export default function Dashboard() {
           transition={{ delay: 1.2, duration: 0.5 }}
           className="bg-white rounded-lg shadow border border-gray-200"
         >
-          <div className="px-4 py-3 border-b border-gray-200">
+          <div className="px-4 py-3 bg-orange-50 border-b border-orange-100">
             <div className="flex items-center gap-2">
-              <svg className="w-5 h-5 text-[var(--primary)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-5 h-5 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
               </svg>
-              <h2 className="text-lg font-semibold text-gray-800">Why Join CREA?</h2>
+              <h2 className="text-base font-semibold text-orange-900">Why Join CREA?</h2>
             </div>
           </div>
           
@@ -677,47 +658,105 @@ export default function Dashboard() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 1.3, duration: 0.5 }}
-            className="bg-white rounded-lg shadow-lg overflow-hidden h-full"
+            className="bg-white rounded-lg shadow-sm border border-gray-200"
           >
-            <div className="bg-[var(--primary)] px-6 py-4">
-              <div className="flex items-center gap-3">
-                <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
-                </svg>
-                <h2 className="text-2xl font-bold !text-white">What's New</h2>
-              </div>
+            <div className="px-5 py-3 bg-indigo-50 border-b border-indigo-100">
+              <h2 className="text-base font-semibold text-indigo-900">What's New</h2>
             </div>
             
-            <div className="p-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <QuickPreviewCard 
-                  title="Events" 
-                  icon={<EventIcon />} 
-                  items={events.map(e => ({ id: e.id, title: e.title, subtitle: e.location, date: e.date }))} 
-                  onViewAll={()=>navigate('/events')} 
-                  delay={0} 
-                />
-                <QuickPreviewCard 
-                  title="Forum" 
-                  icon={<ForumIcon />} 
-                  items={topics.map(t => ({ id: t.id, title: t.title, subtitle: `${t.replies} replies`, date: t.createdAt }))} 
-                  onViewAll={()=>navigate('/forum')} 
-                  delay={1} 
-                />
-                <QuickPreviewCard 
-                  title="Circulars" 
-                  icon={<CircularIcon />} 
-                  items={circulars.map(c => ({ id: c.id, title: c.subject, subtitle: c.boardNumber, date: c.dateOfIssue }))} 
-                  onViewAll={()=>navigate('/documents?tab=circular')} 
-                  delay={2} 
-                />
-                <QuickPreviewCard 
-                  title="Court Cases" 
-                  icon={<CourtCaseIcon />} 
-                  items={cases.map(cc => ({ id: cc.id, title: cc.caseNumber, subtitle: cc.subject, date: cc.date }))} 
-                  onViewAll={()=>navigate('/documents?tab=court-case')} 
-                  delay={3} 
-                />
+            <div className="p-5">
+              <div className="space-y-4">
+                {/* Events */}
+                <div className="border-l-3 border-blue-500 pl-3">
+                  <div className="flex items-center justify-between mb-2">
+                    <div className="flex items-center gap-2">
+                      <EventIcon />
+                      <h3 className="text-sm font-semibold text-gray-700">Events</h3>
+                    </div>
+                    <button 
+                      onClick={()=>navigate('/events')}
+                      className="text-xs text-blue-600 hover:text-blue-800 font-medium"
+                    >
+                      View All →
+                    </button>
+                  </div>
+                  <div className="space-y-1.5">
+                    {events.slice(0, 3).map(e => (
+                      <div key={e.id} className="text-xs text-gray-600 hover:text-gray-900 cursor-pointer line-clamp-1">
+                        • {e.title} - {e.location}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Forum */}
+                <div className="border-l-3 border-green-500 pl-3">
+                  <div className="flex items-center justify-between mb-2">
+                    <div className="flex items-center gap-2">
+                      <ForumIcon />
+                      <h3 className="text-sm font-semibold text-gray-700">Forum</h3>
+                    </div>
+                    <button 
+                      onClick={()=>navigate('/forum')}
+                      className="text-xs text-blue-600 hover:text-blue-800 font-medium"
+                    >
+                      View All →
+                    </button>
+                  </div>
+                  <div className="space-y-1.5">
+                    {topics.slice(0, 3).map(t => (
+                      <div key={t.id} className="text-xs text-gray-600 hover:text-gray-900 cursor-pointer line-clamp-1">
+                        • {t.title} ({t.replies} replies)
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Circulars */}
+                <div className="border-l-3 border-orange-500 pl-3">
+                  <div className="flex items-center justify-between mb-2">
+                    <div className="flex items-center gap-2">
+                      <CircularIcon />
+                      <h3 className="text-sm font-semibold text-gray-700">Circulars</h3>
+                    </div>
+                    <button 
+                      onClick={()=>navigate('/documents?tab=circular')}
+                      className="text-xs text-blue-600 hover:text-blue-800 font-medium"
+                    >
+                      View All →
+                    </button>
+                  </div>
+                  <div className="space-y-1.5">
+                    {circulars.slice(0, 3).map(c => (
+                      <div key={c.id} className="text-xs text-gray-600 hover:text-gray-900 cursor-pointer line-clamp-1">
+                        • {c.subject} ({c.boardNumber})
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Court Cases */}
+                <div className="border-l-3 border-red-500 pl-3">
+                  <div className="flex items-center justify-between mb-2">
+                    <div className="flex items-center gap-2">
+                      <CourtCaseIcon />
+                      <h3 className="text-sm font-semibold text-gray-700">Court Cases</h3>
+                    </div>
+                    <button 
+                      onClick={()=>navigate('/documents?tab=court-case')}
+                      className="text-xs text-blue-600 hover:text-blue-800 font-medium"
+                    >
+                      View All →
+                    </button>
+                  </div>
+                  <div className="space-y-1.5">
+                    {cases.slice(0, 3).map(cc => (
+                      <div key={cc.id} className="text-xs text-gray-600 hover:text-gray-900 cursor-pointer line-clamp-1">
+                        • {cc.caseNumber} - {cc.subject}
+                      </div>
+                    ))}
+                  </div>
+                </div>
               </div>
             </div>
           </motion.div>
@@ -729,54 +768,54 @@ export default function Dashboard() {
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 1.3, duration: 0.5 }}
-            className="bg-white rounded-lg overflow-hidden shadow-lg h-full"
+            className="bg-white rounded-lg overflow-hidden shadow border border-gray-200"
           >
-            <div className="bg-[var(--primary)] px-6 py-4">
-              <div className="flex items-center gap-3">
-                <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div className="px-4 py-3 bg-cyan-50 border-b border-cyan-100">
+              <div className="flex items-center gap-2">
+                <svg className="w-5 h-5 text-cyan-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
                 </svg>
-                <h3 className="font-bold text-2xl !text-white">Quick Actions</h3>
+                <h3 className="text-base font-semibold text-cyan-900">Quick Actions</h3>
               </div>
             </div>
             
-            <div className="p-6 space-y-3">
+            <div className="p-4 space-y-2">
               <button
                 onClick={() => navigate('/apply-membership')}
-                className="w-full bg-[var(--accent)] text-white rounded-lg px-5 py-4 font-bold text-lg hover:bg-[#d49500] transition-all shadow-md hover:shadow-lg flex items-center justify-between"
+                className="w-full bg-[var(--accent)] text-[var(--text-dark)] rounded px-4 py-2.5 font-semibold text-sm hover:bg-[#d49500] transition-all hover:shadow-md flex items-center justify-between group"
               >
                 <span>Apply for Membership</span>
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
                 </svg>
               </button>
               
               <button
                 onClick={() => navigate('/manuals')}
-                className="w-full bg-white border-2 border-gray-300 text-[var(--primary)] rounded-lg px-5 py-4 font-bold text-lg hover:bg-gray-50 hover:border-[var(--primary)] transition-all shadow-sm hover:shadow-md flex items-center justify-between"
+                className="w-full bg-white border border-gray-200 text-[var(--primary)] rounded px-4 py-2.5 font-semibold text-sm hover:bg-gray-50 hover:border-[var(--primary)] transition-all hover:shadow-md flex items-center justify-between group"
               >
                 <span>View Manuals</span>
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
                 </svg>
               </button>
               
               <button
                 onClick={() => navigate('/mutual-transfers')}
-                className="w-full bg-white border-2 border-gray-300 text-[var(--primary)] rounded-lg px-5 py-4 font-bold text-lg hover:bg-gray-50 hover:border-[var(--primary)] transition-all shadow-sm hover:shadow-md flex items-center justify-between"
+                className="w-full bg-white border border-gray-200 text-[var(--primary)] rounded px-4 py-2.5 font-semibold text-sm hover:bg-gray-50 hover:border-[var(--primary)] transition-all hover:shadow-md flex items-center justify-between group"
               >
                 <span>Mutual Transfers</span>
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
                 </svg>
               </button>
 
               <button
                 onClick={() => navigate('/external-links')}
-                className="w-full bg-white border-2 border-gray-300 text-[var(--primary)] rounded-lg px-5 py-4 font-bold text-lg hover:bg-gray-50 hover:border-[var(--primary)] transition-all shadow-sm hover:shadow-md flex items-center justify-between"
+                className="w-full bg-white border border-gray-200 text-[var(--primary)] rounded px-4 py-2.5 font-semibold text-sm hover:bg-gray-50 hover:border-[var(--primary)] transition-all hover:shadow-md flex items-center justify-between group"
               >
                 <span>External Links</span>
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
                 </svg>
               </button>
