@@ -547,6 +547,37 @@ export async function getMembershipStats(): Promise<{
   return request('/api/memberships/stats')
 }
 
+export type BulkUploadResult = {
+  row: number
+  membershipId?: string
+  name?: string
+  email?: string
+  validFrom?: string
+  validUntil?: string
+  data?: any
+  error?: string
+}
+
+export type BulkUploadResponse = {
+  success: boolean
+  message: string
+  results: {
+    success: BulkUploadResult[]
+    failed: BulkUploadResult[]
+    total: number
+  }
+}
+
+export async function bulkUploadMembers(file: File): Promise<BulkUploadResponse> {
+  const formData = new FormData()
+  formData.append('file', file)
+  
+  return request<BulkUploadResponse>('/api/memberships/bulk-upload', { 
+    method: 'POST', 
+    body: formData 
+  })
+}
+
 // Auth
 export type User = { 
   id: string
