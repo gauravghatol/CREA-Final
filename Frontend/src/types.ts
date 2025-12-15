@@ -42,6 +42,30 @@ export type ForumTopic = { id: string; title: string; author: string; createdAt:
 export type ForumComment = { author: string; content: string; createdAt?: string; createdAtStr?: string }
 export type ForumPost = { id: string; topicId: string; author: string; content: string; createdAt: string; likesCount?: number; comments?: ForumComment[] }
 
+export type PendingForumPost = { 
+  _id: string
+  id: string
+  topicId: string
+  topicTitle: string
+  author: string
+  content: string
+  createdAt: string
+  status?: 'pending' | 'approved' | 'rejected'
+}
+
+export type PendingForumComment = {
+  _id: string
+  id: string
+  postId: string
+  author: string
+  topicTitle: string
+  postContent: string
+  commentIndex: number
+  content: string
+  createdAt: string
+  status?: 'pending' | 'approved' | 'rejected'
+}
+
 export type Suggestion = {
   id: string
   userId: string

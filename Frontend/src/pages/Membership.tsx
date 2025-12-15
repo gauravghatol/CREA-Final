@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { motion } from 'framer-motion'
 import Input from '../components/Input'
 import Button from '../components/Button'
@@ -62,7 +62,7 @@ export default function Membership() {
 
   const onBasicInfoChange = (k: keyof Omit<Form, 'personalDetails' | 'professionalDetails' | 'documents'>, v: string | number) => {
     setForm((f) => {
-      const updates: any = { [k]: v }
+      const updates: Partial<Form> = { [k]: v }
       
       // Update payment amount when type changes
       if (k === 'type') {
@@ -73,19 +73,47 @@ export default function Membership() {
     })
   }
 
+  // Validate Step 1 form fields
+  const validateStep1 = useCallback(() => {
+    const nameValid = form.name.trim().length >= 3 && /^[a-zA-Z\s]+$/.test(form.name)
+    const designationValid = form.designation.trim().length >= 2 && /^[a-zA-Z\s]+$/.test(form.designation)
+    const departmentValid = form.department.trim().length >= 2 && /^[a-zA-Z\s]+$/.test(form.department)
+    const placeValid = form.place.trim().length >= 2 && /^[a-zA-Z\s]+$/.test(form.place)
+    const unitValid = form.unit.trim().length >= 1 && /^[a-zA-Z\s]+$/.test(form.unit)
+    const mobileValid = /^[6-9][0-9]{9}$/.test(form.mobile)
+    const emailValid = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/i.test(form.email)
+    const divisionValid = form.division.length > 0
+
+    const isValid = nameValid && designationValid && departmentValid && placeValid && unitValid && mobileValid && emailValid && divisionValid
+    setIsFormValid(isValid)
+  }, [form.name, form.designation, form.department, form.place, form.unit, form.mobile, form.email, form.division])
+
+  // Validate Step 2 form fields
+  const validateStep2 = useCallback(() => {
+    const dobValid = (form.personalDetails.dateOfBirth || '').trim().length > 0
+    const genderValid = (form.personalDetails.gender || '').trim().length > 0
+    const addressValid = (form.personalDetails.address || '').trim().length >= 5
+    const stateValid = (form.personalDetails.state || '').trim().length > 0
+    const cityValid = (form.personalDetails.city || '').trim().length > 0
+    const pincodeValid = /^[1-9][0-9]{5}$/.test(form.personalDetails.pincode || '')
+
+    const isValid = dobValid && genderValid && addressValid && cityValid && stateValid && pincodeValid
+    setIsStep2Valid(isValid)
+  }, [form.personalDetails.dateOfBirth, form.personalDetails.gender, form.personalDetails.address, form.personalDetails.city, form.personalDetails.state, form.personalDetails.pincode])
+
   // Validate form whenever Step 1 fields change
   useEffect(() => {
     if (step === 1) {
       validateStep1()
     }
-  }, [form.name, form.designation, form.department, form.place, form.unit, form.mobile, form.email, form.division, step])
+  }, [step, validateStep1])
 
   // Validate form whenever Step 2 fields change
   useEffect(() => {
     if (step === 2) {
       validateStep2()
     }
-  }, [form.personalDetails.dateOfBirth, form.personalDetails.gender, form.personalDetails.address, form.personalDetails.city, form.personalDetails.state, form.personalDetails.pincode, step])
+  }, [step, validateStep2])
 
   const onPersonalDetailsChange = (k: keyof Required<Form>['personalDetails'], v: string) => {
     setForm((f) => ({ ...f, personalDetails: { ...f.personalDetails, [k]: v } }))
@@ -97,47 +125,6 @@ export default function Membership() {
 
   const onDocumentsChange = (files: File[]) => {
     setForm((f) => ({ ...f, documents: files }))
-  }
-
-  // Validate Step 1 form fields
-  const validateStep1 = () => {
-    const nameValid = form.name.trim().length >= 3 && /^[a-zA-Z\s]+$/.test(form.name)
-    const designationValid = form.designation.trim().length >= 2 && /^[a-zA-Z\s]+$/.test(form.designation)
-    const departmentValid = form.department.trim().length >= 2 && /^[a-zA-Z\s]+$/.test(form.department)
-    const placeValid = form.place.trim().length >= 2 && /^[a-zA-Z\s]+$/.test(form.place)
-    const unitValid = form.unit.trim().length >= 1 && /^[a-zA-Z\s]+$/.test(form.unit)
-    const mobileValid = /^[6-9][0-9]{9}$/.test(form.mobile)
-    const emailValid = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/i.test(form.email)
-    const divisionValid = form.division.length > 0
-
-    console.log('Validation Results:', {
-      nameValid,
-      designationValid,
-      departmentValid,
-      placeValid,
-      unitValid,
-      mobileValid,
-      emailValid,
-      divisionValid,
-      form
-    })
-
-    const isValid = nameValid && designationValid && departmentValid && placeValid && unitValid && mobileValid && emailValid && divisionValid
-    console.log('Form is valid:', isValid)
-    setIsFormValid(isValid)
-  }
-
-  // Validate Step 2 form fields
-  const validateStep2 = () => {
-    const dobValid = (form.personalDetails.dateOfBirth || '').trim().length > 0
-    const genderValid = (form.personalDetails.gender || '').trim().length > 0
-    const addressValid = (form.personalDetails.address || '').trim().length >= 5
-    const stateValid = (form.personalDetails.state || '').trim().length > 0
-    const cityValid = (form.personalDetails.city || '').trim().length > 0
-    const pincodeValid = /^[1-9][0-9]{5}$/.test(form.personalDetails.pincode || '')
-
-    const isValid = dobValid && genderValid && addressValid && cityValid && stateValid && pincodeValid
-    setIsStep2Valid(isValid)
   }
 
   const submit = async () => {

@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { defaultTimelineStops, defaultPastEvents, type PastEvent } from '../data/aboutDefaults'
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion, AnimatePresence, useInView } from 'framer-motion'
 import { useNavigate } from 'react-router-dom'
 import SectionHeader from '../components/SectionHeader'
 import Button from '../components/Button'
@@ -70,6 +70,45 @@ const faqs = [
 ]
 
 const pastEvents = defaultPastEvents
+
+// Counter Animation Component
+function CountUp({ end, duration = 2, suffix = '' }: { end: number; duration?: number; suffix?: string }) {
+  const [count, setCount] = useState(0)
+  const ref = useRef<HTMLDivElement>(null)
+  const isInView = useInView(ref, { once: true })
+
+  useEffect(() => {
+    if (!isInView) return
+
+    let startTime: number | null = null
+    const startValue = 0
+
+    const animate = (currentTime: number) => {
+      if (!startTime) startTime = currentTime
+      const progress = Math.min((currentTime - startTime) / (duration * 1000), 1)
+      
+      // Easing function for smooth animation
+      const easeOutQuart = 1 - Math.pow(1 - progress, 4)
+      const currentCount = Math.floor(easeOutQuart * (end - startValue) + startValue)
+      
+      setCount(currentCount)
+
+      if (progress < 1) {
+        requestAnimationFrame(animate)
+      } else {
+        setCount(end)
+      }
+    }
+
+    requestAnimationFrame(animate)
+  }, [isInView, end, duration])
+
+  return (
+    <div ref={ref} className="text-3xl sm:text-4xl md:text-5xl font-bold text-[var(--accent)] mb-2">
+      {count}{suffix}
+    </div>
+  )
+}
 
 export default function About() {
   usePageTitle('CREA • About Us')
@@ -148,14 +187,16 @@ export default function About() {
         (a, b) => parseInt(a.year) - parseInt(b.year)
       )
       setTimelineStops(merged)
-    } catch {}
+    } catch (error) {
+      console.error('Failed to load milestones:', error)
+    }
   }
 
   useEffect(() => {
     loadMilestonesFromStorage()
     const handler = () => loadMilestonesFromStorage()
-    window.addEventListener('crea_milestones_updated' as any, handler)
-    return () => window.removeEventListener('crea_milestones_updated' as any, handler)
+    window.addEventListener('crea_milestones_updated', handler)
+    return () => window.removeEventListener('crea_milestones_updated', handler)
   }, [])
 
   // Gallery state that reacts to Admin updates
@@ -181,8 +222,8 @@ export default function About() {
     loadGalleryFromStorage()
     const handler = () => loadGalleryFromStorage()
     // Listen for Admin side updates
-    window.addEventListener('crea_gallery_updated' as any, handler)
-    return () => window.removeEventListener('crea_gallery_updated' as any, handler)
+    window.addEventListener('crea_gallery_updated', handler)
+    return () => window.removeEventListener('crea_gallery_updated', handler)
   }, [])
 
   return (
@@ -262,15 +303,15 @@ export default function About() {
                 className="mt-12 grid grid-cols-3 gap-4 sm:gap-8 max-w-3xl mx-auto"
               >
                 <div className="text-center">
-                  <div className="text-3xl sm:text-4xl md:text-5xl font-bold text-[var(--accent)] mb-2">75+</div>
+                  <CountUp end={75} duration={2.5} suffix="+" />
                   <div className="text-xs sm:text-sm md:text-base text-gray-300">Years of Service</div>
                 </div>
                 <div className="text-center border-x border-[var(--secondary)]">
-                  <div className="text-3xl sm:text-4xl md:text-5xl font-bold text-[var(--accent)] mb-2">5</div>
+                  <CountUp end={5} duration={1.5} suffix="" />
                   <div className="text-xs sm:text-sm md:text-base text-gray-300">Divisions</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-3xl sm:text-4xl md:text-5xl font-bold text-[var(--accent)] mb-2">1000+</div>
+                  <CountUp end={1000} duration={2.5} suffix="+" />
                   <div className="text-xs sm:text-sm md:text-base text-gray-300">Members</div>
                 </div>
               </motion.div>
