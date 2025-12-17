@@ -73,13 +73,13 @@ const seedBodyMembers = async () => {
         name: 'K. Rao',
         designation: 'President',
         photoUrl: 'https://via.placeholder.com/150',
-        division: 'BSL'
+        division: 'Bhusawal'
       },
       {
         name: 'N. Kumar',
         designation: 'Secretary',
         photoUrl: 'https://via.placeholder.com/150',
-        division: 'BSL'
+        division: 'Bhusawal'
       }
     ];
 

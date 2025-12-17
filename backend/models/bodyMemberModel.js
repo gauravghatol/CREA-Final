@@ -19,7 +19,7 @@ const bodyMemberSchema = new mongoose.Schema(
     division: {
       type: String,
       required: [true, 'Division is required'],
-      enum: ['BSL', 'Pune', 'Solapur', 'Nagpur', 'Mumbai']
+      enum: ['Bhusawal', 'Pune', 'Solapur', 'Nagpur', 'Mumbai']
     }
   },
   { 

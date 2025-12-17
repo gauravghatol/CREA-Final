@@ -21,7 +21,7 @@ export default function Membership() {
   const [form, setForm] = useState<Form>({
     name: '', 
     designation: '', 
-    division: 'BSL', 
+    division: 'Bhusawal', 
     department: '', 
     place: '', 
     unit: '', 
@@ -487,7 +487,7 @@ export default function Membership() {
                   required
                 >
                   <option value="">Select Division</option>
-                  {['BSL', 'NGP', 'PA', 'SUR', 'MB', 'HQ Unit'].map((division) => (
+                  {['Bhusawal', 'NGP', 'PA', 'SUR', 'MB', 'HQ Unit'].map((division) => (
                     <option key={division} value={division}>{division}</option>
                   ))}
                 </select>
