@@ -50,9 +50,9 @@ const exploreLinks = [
 
 
 const supportLinks = [
-  { label: "Help Desk", href: "mailto:helpdesk@crea.org" },
+  { label: "Help Desk", href: "mailto:creabsl@gmail.com" },
   { label: "Meet the Developers", to: "/developers" },
-  { label: "Membership Support", href: "tel:+911234567890" },
+  { label: "Membership Support", href: "tel:+9195503011162" },
   { label: "Suggestion Box", to: "/suggestions" },
   { label: "Privacy Policy", href: "http://localhost:5001/uploads/document/CREA_Short_Privacy_Policy.pdf", target: "_blank" },
   { label: "Terms of Service", href: "#" },

@@ -76,14 +76,14 @@ const demoMembers: BodyMember[] = [
     name: 'T. Desai',
     designation: 'Executive Member',
     photoUrl: 'https://ui-avatars.com/api/?name=T+Desai&size=200&background=0d2c54&color=fff&bold=true',
-    division: 'BSL'
+    division: 'Bhusawal'
   }
 ];
 
 export default function BodyDetails() {
   const [list, setList] = useState<BodyMember[]>(demoMembers)
   const [isLoading, setIsLoading] = useState(true)
-  const [selectedDivision, setSelectedDivision] = useState<Division>('BSL')
+  const [selectedDivision, setSelectedDivision] = useState<Division>('Bhusawal')
   
   usePageTitle('CREA • Association Body')
   

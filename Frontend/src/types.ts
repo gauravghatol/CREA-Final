@@ -1,5 +1,5 @@
 // Centralized list of supported divisions used across the app
-export const DIVISIONS = ['BSL', 'Pune', 'Solapur', 'Nagpur', 'Mumbai'] as const
+export const DIVISIONS = ['Bhusawal', 'Pune', 'Solapur', 'Nagpur', 'Mumbai'] as const
 export type Division = typeof DIVISIONS[number]
 
 export type MemberCount = {
