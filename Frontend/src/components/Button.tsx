@@ -37,7 +37,7 @@ export default function Button({ variant = 'primary', className = '', children, 
         {loading && (
           // Subtle inline spinner to the left when loading
           <span className="-ml-1 inline-flex">
-            <Spinner size={16} variant="classic" />
+            <Spinner size={16} />
           </span>
         )}
         <span>{children}</span>
