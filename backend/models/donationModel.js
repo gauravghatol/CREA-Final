@@ -32,7 +32,7 @@ const donationSchema = new mongoose.Schema(
     // Message (optional)
     message: { type: String },
     
-    // Payment Information (to be added when payment gateway is integrated)
+    // Payment Information
     paymentStatus: { 
       type: String, 
       enum: ['pending', 'completed', 'failed'],
@@ -40,6 +40,17 @@ const donationSchema = new mongoose.Schema(
     },
     paymentReference: { type: String },
     paymentDate: { type: Date },
+    
+    // Razorpay Payment Fields
+    razorpayOrderId: { type: String },
+    razorpayPaymentId: { type: String },
+    razorpaySignature: { type: String },
+    paymentMethod: { 
+      type: String,
+      enum: ['upi', 'card', 'netbanking', 'wallet'],
+      default: 'card'
+    },
+    upiId: { type: String }, // For UPI payments
   },
   { timestamps: true }
 );

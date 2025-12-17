@@ -3,7 +3,14 @@ const User = require('../models/userModel');
 const { sendMail } = require('../config/mailer');
 const jwt = require('jsonwebtoken');
 
-const generateToken = (id) => jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: '7d' });
+const generateToken = (id) => jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+
+const generateRefreshToken = (id) => jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: '7d' });
+
+const storeRefreshToken = async (userId, refreshToken) => {
+  const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000); // 7 days
+  await User.findByIdAndUpdate(userId, { refreshToken, refreshTokenExpiresAt: expiresAt });
+};
 
 function generateCode() {
   return String(Math.floor(100000 + Math.random() * 900000));
@@ -49,9 +56,47 @@ exports.verifyOtp = async (req, res) => {
       user = await User.create({ name, email, password, role: 'member' });
     }
     const token = generateToken(user._id);
-    return res.json({ _id: user._id, name: user.name, email: user.email, role: user.role, token });
+    const refreshToken = generateRefreshToken(user._id);
+    await storeRefreshToken(user._id, refreshToken);
+    return res.json({ _id: user._id, name: user.name, email: user.email, role: user.role, token, refreshToken });
   } catch (e) {
     console.error('verifyOtp error:', e);
+    return res.status(500).json({ message: 'Server error' });
+  }
+};
+
+exports.refreshAccessToken = async (req, res) => {
+  try {
+    const { refreshToken } = req.body || {};
+    if (!refreshToken) return res.status(400).json({ message: 'Refresh token required' });
+
+    const decoded = jwt.verify(refreshToken, process.env.JWT_SECRET);
+    const user = await User.findById(decoded.id);
+    
+    if (!user || user.refreshToken !== refreshToken) {
+      return res.status(401).json({ message: 'Invalid refresh token' });
+    }
+
+    if (new Date() > user.refreshTokenExpiresAt) {
+      return res.status(401).json({ message: 'Refresh token expired' });
+    }
+
+    const newToken = generateToken(user._id);
+    return res.json({ token: newToken });
+  } catch (e) {
+    console.error('refreshAccessToken error:', e.message);
+    return res.status(401).json({ message: 'Invalid refresh token' });
+  }
+};
+
+exports.logout = async (req, res) => {
+  try {
+    if (req.user) {
+      await User.findByIdAndUpdate(req.user._id, { refreshToken: null, refreshTokenExpiresAt: null });
+    }
+    return res.json({ success: true, message: 'Logged out successfully' });
+  } catch (e) {
+    console.error('logout error:', e);
     return res.status(500).json({ message: 'Server error' });
   }
 };

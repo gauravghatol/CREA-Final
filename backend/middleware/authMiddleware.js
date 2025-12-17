@@ -19,7 +19,13 @@ module.exports.protect = async (req, res, next) => {
       }
       return next();
     } catch (error) {
-      console.error('Auth error:', error.message);
+      // Only log critical errors, not expired token errors
+      if (error.name === 'TokenExpiredError') {
+        return res.status(401).json({ message: 'Token expired, please refresh' });
+      }
+      if (error.name !== 'JsonWebTokenError') {
+        console.error('Auth error:', error.message);
+      }
       return res.status(401).json({ message: 'Not authorized, token failed' });
     }
   }

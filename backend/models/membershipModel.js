@@ -17,6 +17,13 @@ const membershipSchema = new mongoose.Schema(
     paymentAmount: { type: Number, required: true },
     paymentDate: { type: Date },
     paymentReference: { type: String },
+    
+    // Razorpay Payment Fields
+    razorpayOrderId: { type: String },
+    razorpayPaymentId: { type: String },
+    razorpaySignature: { type: String },
+    upiId: { type: String }, // For UPI payments
+    
     status: { type: String, enum: ['pending', 'active', 'expired', 'rejected'], default: 'pending' },
     validFrom: { type: Date },
     validUntil: { type: Date },

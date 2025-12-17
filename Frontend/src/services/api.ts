@@ -506,6 +506,39 @@ export async function submitMembership(form: MembershipFormData): Promise<Member
   return request<MembershipResponse>('/api/memberships', { method: 'POST', body: formData })
 }
 
+export async function createMembershipOrder(form: MembershipFormData): Promise<{ success: boolean; orderId: string; keyId: string; membershipDbId: string; membershipId: string; amount: number }> {
+  const formData = new FormData()
+  
+  // Add basic fields
+  Object.entries(form).forEach(([key, value]) => {
+    if (key !== 'documents' && key !== 'personalDetails' && key !== 'professionalDetails') {
+      formData.append(key, String(value))
+    }
+  })
+
+  // Add nested objects
+  if (form.personalDetails) {
+    Object.entries(form.personalDetails).forEach(([key, value]) => {
+      if (value) formData.append(`personalDetails[${key}]`, String(value))
+    })
+  }
+
+  if (form.professionalDetails) {
+    Object.entries(form.professionalDetails).forEach(([key, value]) => {
+      if (value) formData.append(`professionalDetails[${key}]`, String(value))
+    })
+  }
+
+  return request('/api/memberships/create-order', { method: 'POST', body: formData })
+}
+
+export async function verifyMembershipPayment(data: { razorpay_order_id: string; razorpay_payment_id: string; razorpay_signature: string }): Promise<{ success: boolean; message: string; membershipId: string; membershipNumber: string; status: string; paymentStatus: string }> {
+  return request('/api/memberships/verify-payment', {
+    method: 'POST',
+    body: JSON.stringify(data)
+  })
+}
+
 export async function getMembership(id: string): Promise<Membership> {
   return request<Membership>(`/api/memberships/${id}`)
 }
@@ -967,6 +1000,20 @@ export async function deleteAchievement(id: string): Promise<void> {
 
 export async function createDonation(data: Partial<Donation>): Promise<Donation> {
   return await request<Donation>('/api/donations', {
+    method: 'POST',
+    body: JSON.stringify(data)
+  })
+}
+
+export async function createDonationOrder(data: Partial<Donation>): Promise<{ success: boolean; orderId: string; keyId: string; donationDbId: string; amount: number }> {
+  return await request('/api/donations/create-order', {
+    method: 'POST',
+    body: JSON.stringify(data)
+  })
+}
+
+export async function verifyDonationPayment(data: { razorpay_order_id: string; razorpay_payment_id: string; razorpay_signature: string }): Promise<{ success: boolean; message: string; donationId: string; paymentStatus: string }> {
+  return await request('/api/donations/verify-payment', {
     method: 'POST',
     body: JSON.stringify(data)
   })

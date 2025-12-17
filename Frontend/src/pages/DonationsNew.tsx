@@ -54,6 +54,7 @@ export default function Donations() {
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
   const handleInputChange = (field: string, value: string | boolean) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
@@ -118,15 +119,6 @@ export default function Donations() {
         email: formData.email,
         contact: formData.mobile,
       },
-      method: {
-        upi: true,
-        card: true,
-        wallet: true,
-        netbanking: true,
-      },
-      upi: {
-        flow: 'otp', // Show UPI first with OTP flow
-      },
       handler: async (response: any) => {
         // Step 3: Verify payment on backend
         try {
@@ -138,6 +130,7 @@ export default function Donations() {
 
           if (verifyResponse.success) {
             setSubmitted(true);
+            setSuccessMessage(`Thank you! Your donation of ₹${formData.amount} has been received.`);
             
             // Reset form after showing success message
             setTimeout(() => {
@@ -161,6 +154,7 @@ export default function Donations() {
               });
               setShowEmployeeFields(false);
               setSubmitted(false);
+              setSuccessMessage(null);
             }, 5000);
           } else {
             setError(verifyResponse.message || "Payment verification failed");
