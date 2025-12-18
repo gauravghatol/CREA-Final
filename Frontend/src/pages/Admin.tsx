@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { motion } from "framer-motion";
 import Button from "../components/Button";
 import Input from "../components/Input";
@@ -71,6 +71,7 @@ import {
 
 export default function Admin() {
   usePageTitle("CREA • Admin");
+  const [searchParams] = useSearchParams();
   const [tab, setTab] = useState<
     | "events"
     | "documents"
@@ -85,6 +86,9 @@ export default function Admin() {
     | "achievements"
     | "breaking-news"
   >("events");
+  const [initialDocumentsSubTab, setInitialDocumentsSubTab] = useState<
+    "circulars" | "manuals" | "court-cases" | undefined
+  >(undefined);
   const [events, setEvents] = useState<EventItem[]>([]);
   const [manuals, setManuals] = useState<Manual[]>([]);
   const [circulars, setCirculars] = useState<Circular[]>([]);
@@ -108,6 +112,37 @@ export default function Admin() {
       .catch(console.error);
     getForumTopics().then(setForumTopics).catch(console.error);
     getSuggestions().then(setSuggestions).catch(console.error);
+
+    const tabFromUrl = searchParams.get("tab");
+    if (
+      tabFromUrl &&
+      [
+        "events",
+        "documents",
+        "forum",
+        "suggestions",
+        "members",
+        "settings",
+        "about",
+        "transfers",
+        "association-body",
+        "donations",
+        "achievements",
+        "breaking-news",
+      ].includes(tabFromUrl)
+    ) {
+      setTab(tabFromUrl as typeof tab);
+    }
+
+    const subTabFromUrl = searchParams.get("subTab");
+    if (
+      subTabFromUrl &&
+      ["circulars", "manuals", "court-cases"].includes(subTabFromUrl)
+    ) {
+      setInitialDocumentsSubTab(
+        subTabFromUrl as "circulars" | "manuals" | "court-cases"
+      );
+    }
   }, []);
 
   return (
@@ -237,6 +272,7 @@ export default function Admin() {
       {tab === "events" && <EventsAdmin data={events} onChange={setEvents} />}
       {tab === "documents" && (
         <DocumentsAdmin
+          initialSubTab={initialDocumentsSubTab}
           manuals={manuals}
           circulars={circulars}
           courtCases={cases}
@@ -1866,6 +1902,7 @@ function EventsAdmin({
 type DocumentSubTab = "circulars" | "manuals" | "court-cases";
 
 function DocumentsAdmin({
+  initialSubTab,
   manuals,
   circulars,
   courtCases,
@@ -1873,6 +1910,7 @@ function DocumentsAdmin({
   onCircularsChange,
   onCourtCasesChange,
 }: {
+  initialSubTab?: DocumentSubTab;
   manuals: Manual[];
   circulars: Circular[];
   courtCases: CourtCase[];
@@ -1880,7 +1918,13 @@ function DocumentsAdmin({
   onCircularsChange: (d: Circular[]) => void;
   onCourtCasesChange: (d: CourtCase[]) => void;
 }) {
-  const [subTab, setSubTab] = useState<DocumentSubTab>("circulars");
+  const [subTab, setSubTab] = useState<DocumentSubTab>(
+    initialSubTab || "circulars"
+  );
+
+  useEffect(() => {
+    if (initialSubTab) setSubTab(initialSubTab);
+  }, [initialSubTab]);
 
   // Select mode state
   const [selectModeCirculars, setSelectModeCirculars] = useState(false);
@@ -1907,10 +1951,7 @@ function DocumentsAdmin({
   // Filtered data
   const filteredCirculars = circulars.filter(
     (c) =>
-      c.subject.toLowerCase().includes(searchQueryCirculars.toLowerCase()) ||
-      c.boardNumber
-        .toLowerCase()
-        .includes(searchQueryCirculars.toLowerCase()) ||
+      c.title.toLowerCase().includes(searchQueryCirculars.toLowerCase()) ||
       c.dateOfIssue.includes(searchQueryCirculars)
   );
 
@@ -1926,7 +1967,7 @@ function DocumentsAdmin({
   );
 
   // Circular state
-  const [circularBoardNumber, setCircularBoardNumber] = useState("");
+  const [circularTitle, setCircularTitle] = useState("");
   const [circularSubject, setCircularSubject] = useState("");
   const [circularDateOfIssue, setCircularDateOfIssue] = useState("");
   const [circularUrl, setCircularUrl] = useState("");
@@ -1935,6 +1976,8 @@ function DocumentsAdmin({
 
   // Manual state
   const [manualTitle, setManualTitle] = useState("");
+  const [manualDate, setManualDate] = useState("");
+  const [manualSubject, setManualSubject] = useState("");
   const [manualUrl, setManualUrl] = useState("");
   const [manualFile, setManualFile] = useState<File | null>(null);
   const [manualCategory, setManualCategory] = useState<
@@ -1946,12 +1989,17 @@ function DocumentsAdmin({
   const [caseCaseNumber, setCaseCaseNumber] = useState("");
   const [caseDate, setCaseDate] = useState("");
   const [caseSubject, setCaseSubject] = useState("");
+  const [caseStatus, setCaseStatus] = useState<
+    "pending" | "ongoing" | "closed"
+  >("ongoing");
+  const [caseUrl, setCaseUrl] = useState("");
+  const [caseFile, setCaseFile] = useState<File | null>(null);
   const [editingCourtCase, setEditingCourtCase] = useState<CourtCase | null>(
     null
   );
 
   const resetCircularForm = () => {
-    setCircularBoardNumber("");
+    setCircularTitle("");
     setCircularSubject("");
     setCircularDateOfIssue("");
     setCircularUrl("");
@@ -1961,6 +2009,8 @@ function DocumentsAdmin({
 
   const resetManualForm = () => {
     setManualTitle("");
+    setManualDate("");
+    setManualSubject("");
     setManualUrl("");
     setManualFile(null);
     setManualCategory("general");
@@ -1971,12 +2021,15 @@ function DocumentsAdmin({
     setCaseCaseNumber("");
     setCaseDate("");
     setCaseSubject("");
+    setCaseStatus("ongoing");
+    setCaseUrl("");
+    setCaseFile(null);
     setEditingCourtCase(null);
   };
 
   const handleEditCircular = (c: Circular) => {
-    setCircularBoardNumber(c.boardNumber);
-    setCircularSubject(c.subject);
+    setCircularTitle(c.title);
+    setCircularSubject(c.subject || "");
     setCircularDateOfIssue(c.dateOfIssue);
     setCircularUrl(c.url || "");
     setCircularFile(null);
@@ -1985,6 +2038,8 @@ function DocumentsAdmin({
 
   const handleEditManual = (m: Manual) => {
     setManualTitle(m.title);
+    setManualDate(m.date || "");
+    setManualSubject(m.subject || "");
     setManualUrl(m.url || "");
     setManualFile(null);
     setManualCategory(m.category || "general");
@@ -1995,14 +2050,17 @@ function DocumentsAdmin({
     setCaseCaseNumber(cc.caseNumber);
     setCaseDate(cc.date);
     setCaseSubject(cc.subject);
+    setCaseStatus(cc.status || "ongoing");
+    setCaseUrl(cc.url || "");
+    setCaseFile(null);
     setEditingCourtCase(cc);
   };
 
   const handleSaveCircular = async () => {
     if (editingCircular) {
       const upd = await updateCircular(editingCircular.id, {
-        boardNumber: circularBoardNumber,
-        subject: circularSubject,
+        title: circularTitle,
+        subject: circularSubject || undefined,
         dateOfIssue: circularDateOfIssue,
         url: circularUrl || undefined,
         file: circularFile || undefined,
@@ -2013,8 +2071,8 @@ function DocumentsAdmin({
       resetCircularForm();
     } else {
       const c = await createCircular({
-        boardNumber: circularBoardNumber,
-        subject: circularSubject,
+        title: circularTitle,
+        subject: circularSubject || undefined,
         dateOfIssue: circularDateOfIssue,
         url: circularUrl || undefined,
         file: circularFile || undefined,
@@ -2028,6 +2086,8 @@ function DocumentsAdmin({
     if (editingManual) {
       const upd = await updateManual(editingManual.id, {
         title: manualTitle,
+        date: manualDate || undefined,
+        subject: manualSubject || undefined,
         url: manualUrl || undefined,
         file: manualFile || undefined,
         category: manualCategory,
@@ -2039,6 +2099,8 @@ function DocumentsAdmin({
     } else {
       const m = await createManual({
         title: manualTitle,
+        date: manualDate || undefined,
+        subject: manualSubject || undefined,
         url: manualUrl || undefined,
         file: manualFile || undefined,
         category: manualCategory,
@@ -2054,6 +2116,9 @@ function DocumentsAdmin({
         caseNumber: caseCaseNumber,
         date: caseDate,
         subject: caseSubject,
+        status: caseStatus,
+        url: caseUrl || undefined,
+        file: caseFile || undefined,
       });
       onCourtCasesChange(
         courtCases.map((d) => (d.id === editingCourtCase.id ? upd : d))
@@ -2064,6 +2129,9 @@ function DocumentsAdmin({
         caseNumber: caseCaseNumber,
         date: caseDate,
         subject: caseSubject,
+        status: caseStatus,
+        url: caseUrl || undefined,
+        file: caseFile || undefined,
       });
       onCourtCasesChange([cc, ...courtCases]);
       resetCourtCaseForm();
@@ -2239,23 +2307,21 @@ function DocumentsAdmin({
               {editingCircular ? "Edit Circular" : "Add New Circular"}
             </h3>
             <div className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <Input
-                  label="Board Number"
-                  value={circularBoardNumber}
-                  onChange={(e) => setCircularBoardNumber(e.target.value)}
-                />
-                <Input
-                  label="Date of Issue"
-                  type="date"
-                  value={circularDateOfIssue}
-                  onChange={(e) => setCircularDateOfIssue(e.target.value)}
-                />
-              </div>
+              <Input
+                label="Title"
+                value={circularTitle}
+                onChange={(e) => setCircularTitle(e.target.value)}
+              />
               <Input
                 label="Subject"
                 value={circularSubject}
                 onChange={(e) => setCircularSubject(e.target.value)}
+              />
+              <Input
+                label="Date of Issue"
+                type="date"
+                value={circularDateOfIssue}
+                onChange={(e) => setCircularDateOfIssue(e.target.value)}
               />
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <Input
@@ -2265,11 +2331,11 @@ function DocumentsAdmin({
                 />
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    File (PDF or Image)
+                    File (PDF/Image/DOC/DOCX)
                   </label>
                   <input
                     type="file"
-                    accept="application/pdf,image/*"
+                    accept="application/pdf,image/*,.doc,.docx"
                     className="block w-full text-sm text-gray-600 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-purple-50 file:text-purple-700 hover:file:bg-purple-100"
                     onChange={(e) =>
                       setCircularFile(e.target.files?.[0] || null)
@@ -2419,10 +2485,10 @@ function DocumentsAdmin({
                   )}
                   <div className="flex-1">
                     <div className="font-semibold text-gray-800">
-                      {c.subject}
+                      {c.title}
                     </div>
                     <div className="text-sm text-gray-600 mt-1">
-                      {c.boardNumber} • {c.dateOfIssue}
+                      {c.dateOfIssue}
                     </div>
                     {c.url && (
                       <div className="text-sm text-[var(--primary)] mt-1">
@@ -2500,6 +2566,19 @@ function DocumentsAdmin({
                 value={manualTitle}
                 onChange={(e) => setManualTitle(e.target.value)}
               />
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <Input
+                  label="Date (optional)"
+                  type="date"
+                  value={manualDate}
+                  onChange={(e) => setManualDate(e.target.value)}
+                />
+                <Input
+                  label="Subject/Description (optional)"
+                  value={manualSubject}
+                  onChange={(e) => setManualSubject(e.target.value)}
+                />
+              </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   Category
@@ -2531,11 +2610,11 @@ function DocumentsAdmin({
                 />
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    File (PDF or Image)
+                    File (PDF/Image/DOC/DOCX)
                   </label>
                   <input
                     type="file"
-                    accept="application/pdf,image/*"
+                    accept="application/pdf,image/*,.doc,.docx"
                     className="block w-full text-sm text-gray-600 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
                     onChange={(e) => setManualFile(e.target.files?.[0] || null)}
                   />
@@ -2693,6 +2772,11 @@ function DocumentsAdmin({
                         </span>
                       )}
                     </div>
+                    <div className="text-sm text-gray-600 mt-1">
+                      {m.date && <span>{new Date(m.date).toLocaleDateString()}</span>}
+                      {m.date && m.subject && <span> • </span>}
+                      {m.subject && <span>{m.subject}</span>}
+                    </div>
                     {m.url && (
                       <div className="text-sm text-[var(--primary)] mt-1">
                         <a
@@ -2781,6 +2865,47 @@ function DocumentsAdmin({
                   value={caseSubject}
                   onChange={(e) => setCaseSubject(e.target.value)}
                 />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Status
+                </label>
+                <select
+                  value={caseStatus}
+                  onChange={(e) =>
+                    setCaseStatus(
+                      e.target.value as "pending" | "ongoing" | "closed"
+                    )
+                  }
+                  className="block w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm shadow-sm focus:border-[var(--primary)] focus:ring-1 focus:ring-[var(--primary)]"
+                >
+                  <option value="pending">Pending</option>
+                  <option value="ongoing">Ongoing</option>
+                  <option value="closed">Closed</option>
+                </select>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <Input
+                  label="URL (optional)"
+                  value={caseUrl}
+                  onChange={(e) => setCaseUrl(e.target.value)}
+                />
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    File (PDF/Image/DOC/DOCX) (optional)
+                  </label>
+                  <input
+                    type="file"
+                    accept="application/pdf,image/*,.doc,.docx"
+                    className="block w-full text-sm text-gray-600 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-red-50 file:text-red-700 hover:file:bg-red-100"
+                    onChange={(e) =>
+                      setCaseFile(e.target.files?.[0] || null)
+                    }
+                  />
+                  <div className="text-xs text-gray-500 mt-1">
+                    Provide either a URL or upload a file.
+                  </div>
+                </div>
               </div>
               <div className="flex gap-2">
                 <Button onClick={handleSaveCourtCase}>
@@ -2924,6 +3049,18 @@ function DocumentsAdmin({
                     <div className="text-sm text-gray-600 mt-1">
                       {new Date(c.date).toLocaleDateString()} • {c.subject}
                     </div>
+                    {c.url && (
+                      <div className="text-sm text-[var(--primary)] mt-1">
+                        <a
+                          className="underline hover:text-[var(--accent)]"
+                          href={c.url}
+                          target="_blank"
+                          rel="noreferrer"
+                        >
+                          View Document →
+                        </a>
+                      </div>
+                    )}
                   </div>
                   <div className="flex gap-2">
                     <Button
