@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import Button from "../components/Button";
 import Input from "../components/Input";
@@ -46,6 +46,7 @@ import {
   deleteForumTopic,
   getSuggestions,
   deleteSuggestion,
+  getAllDonations,
 } from "../services/api";
 import type {
   Circular,
@@ -60,6 +61,7 @@ import type {
   Suggestion,
 } from "../types";
 import BreakingNewsAdmin from "../components/BreakingNewsAdmin";
+import MembershipsAdmin from "../components/MembershipsAdmin";
 import { DIVISIONS } from "../types";
 import type { MemberUser, Setting } from "../services/api";
 import {
@@ -71,7 +73,6 @@ import {
 
 export default function Admin() {
   usePageTitle("CREA • Admin");
-  const [searchParams] = useSearchParams();
   const [tab, setTab] = useState<
     | "events"
     | "documents"
@@ -85,10 +86,8 @@ export default function Admin() {
     | "donations"
     | "achievements"
     | "breaking-news"
+    | "memberships"
   >("events");
-  const [initialDocumentsSubTab, setInitialDocumentsSubTab] = useState<
-    "circulars" | "manuals" | "court-cases" | undefined
-  >(undefined);
   const [events, setEvents] = useState<EventItem[]>([]);
   const [manuals, setManuals] = useState<Manual[]>([]);
   const [circulars, setCirculars] = useState<Circular[]>([]);
@@ -112,37 +111,6 @@ export default function Admin() {
       .catch(console.error);
     getForumTopics().then(setForumTopics).catch(console.error);
     getSuggestions().then(setSuggestions).catch(console.error);
-
-    const tabFromUrl = searchParams.get("tab");
-    if (
-      tabFromUrl &&
-      [
-        "events",
-        "documents",
-        "forum",
-        "suggestions",
-        "members",
-        "settings",
-        "about",
-        "transfers",
-        "association-body",
-        "donations",
-        "achievements",
-        "breaking-news",
-      ].includes(tabFromUrl)
-    ) {
-      setTab(tabFromUrl as typeof tab);
-    }
-
-    const subTabFromUrl = searchParams.get("subTab");
-    if (
-      subTabFromUrl &&
-      ["circulars", "manuals", "court-cases"].includes(subTabFromUrl)
-    ) {
-      setInitialDocumentsSubTab(
-        subTabFromUrl as "circulars" | "manuals" | "court-cases"
-      );
-    }
   }, []);
 
   return (
@@ -248,6 +216,8 @@ export default function Admin() {
               ? "Mutual Transfers"
               : k === "breaking-news"
               ? "Breaking News"
+              : k === "members"
+              ? "Users"
               : k
                   .split("-")
                   .map((word) => word[0].toUpperCase() + word.slice(1))
@@ -272,7 +242,6 @@ export default function Admin() {
       {tab === "events" && <EventsAdmin data={events} onChange={setEvents} />}
       {tab === "documents" && (
         <DocumentsAdmin
-          initialSubTab={initialDocumentsSubTab}
           manuals={manuals}
           circulars={circulars}
           courtCases={cases}
@@ -318,6 +287,7 @@ export default function Admin() {
       {tab === "association-body" && <AssociationBodyAdmin />}
       {tab === "achievements" && <AchievementsAdmin />}
       {tab === "donations" && <DonationsAdmin />}
+      {tab === "memberships" && <MembershipsAdmin />}
       {tab === "breaking-news" && <BreakingNewsAdmin />}
     </div>
   );
@@ -1185,7 +1155,7 @@ function MembersAdmin({
                 />
               </svg>
             </span>
-            Member Management ({data.length} members)
+            User Management ({data.length} users)
           </h3>
         </div>
         <div className="overflow-x-auto">
@@ -1902,7 +1872,6 @@ function EventsAdmin({
 type DocumentSubTab = "circulars" | "manuals" | "court-cases";
 
 function DocumentsAdmin({
-  initialSubTab,
   manuals,
   circulars,
   courtCases,
@@ -1910,7 +1879,6 @@ function DocumentsAdmin({
   onCircularsChange,
   onCourtCasesChange,
 }: {
-  initialSubTab?: DocumentSubTab;
   manuals: Manual[];
   circulars: Circular[];
   courtCases: CourtCase[];
@@ -1918,13 +1886,7 @@ function DocumentsAdmin({
   onCircularsChange: (d: Circular[]) => void;
   onCourtCasesChange: (d: CourtCase[]) => void;
 }) {
-  const [subTab, setSubTab] = useState<DocumentSubTab>(
-    initialSubTab || "circulars"
-  );
-
-  useEffect(() => {
-    if (initialSubTab) setSubTab(initialSubTab);
-  }, [initialSubTab]);
+  const [subTab, setSubTab] = useState<DocumentSubTab>("circulars");
 
   // Select mode state
   const [selectModeCirculars, setSelectModeCirculars] = useState(false);
@@ -1951,23 +1913,26 @@ function DocumentsAdmin({
   // Filtered data
   const filteredCirculars = circulars.filter(
     (c) =>
-      c.title.toLowerCase().includes(searchQueryCirculars.toLowerCase()) ||
-      c.dateOfIssue.includes(searchQueryCirculars)
+      c.subject?.toLowerCase().includes(searchQueryCirculars.toLowerCase()) ||
+      c.boardNumber
+        ?.toLowerCase()
+        .includes(searchQueryCirculars.toLowerCase()) ||
+      c.dateOfIssue?.includes(searchQueryCirculars)
   );
 
   const filteredManuals = manuals.filter((m) =>
-    m.title.toLowerCase().includes(searchQueryManuals.toLowerCase())
+    m.title?.toLowerCase().includes(searchQueryManuals.toLowerCase())
   );
 
   const filteredCases = courtCases.filter(
     (c) =>
-      c.caseNumber.toLowerCase().includes(searchQueryCases.toLowerCase()) ||
-      c.subject.toLowerCase().includes(searchQueryCases.toLowerCase()) ||
-      c.date.includes(searchQueryCases)
+      c.caseNumber?.toLowerCase().includes(searchQueryCases.toLowerCase()) ||
+      c.subject?.toLowerCase().includes(searchQueryCases.toLowerCase()) ||
+      c.date?.includes(searchQueryCases)
   );
 
   // Circular state
-  const [circularTitle, setCircularTitle] = useState("");
+  const [circularBoardNumber, setCircularBoardNumber] = useState("");
   const [circularSubject, setCircularSubject] = useState("");
   const [circularDateOfIssue, setCircularDateOfIssue] = useState("");
   const [circularUrl, setCircularUrl] = useState("");
@@ -1976,8 +1941,6 @@ function DocumentsAdmin({
 
   // Manual state
   const [manualTitle, setManualTitle] = useState("");
-  const [manualDate, setManualDate] = useState("");
-  const [manualSubject, setManualSubject] = useState("");
   const [manualUrl, setManualUrl] = useState("");
   const [manualFile, setManualFile] = useState<File | null>(null);
   const [manualCategory, setManualCategory] = useState<
@@ -1989,17 +1952,12 @@ function DocumentsAdmin({
   const [caseCaseNumber, setCaseCaseNumber] = useState("");
   const [caseDate, setCaseDate] = useState("");
   const [caseSubject, setCaseSubject] = useState("");
-  const [caseStatus, setCaseStatus] = useState<
-    "pending" | "ongoing" | "closed"
-  >("ongoing");
-  const [caseUrl, setCaseUrl] = useState("");
-  const [caseFile, setCaseFile] = useState<File | null>(null);
   const [editingCourtCase, setEditingCourtCase] = useState<CourtCase | null>(
     null
   );
 
   const resetCircularForm = () => {
-    setCircularTitle("");
+    setCircularBoardNumber("");
     setCircularSubject("");
     setCircularDateOfIssue("");
     setCircularUrl("");
@@ -2009,8 +1967,6 @@ function DocumentsAdmin({
 
   const resetManualForm = () => {
     setManualTitle("");
-    setManualDate("");
-    setManualSubject("");
     setManualUrl("");
     setManualFile(null);
     setManualCategory("general");
@@ -2021,15 +1977,12 @@ function DocumentsAdmin({
     setCaseCaseNumber("");
     setCaseDate("");
     setCaseSubject("");
-    setCaseStatus("ongoing");
-    setCaseUrl("");
-    setCaseFile(null);
     setEditingCourtCase(null);
   };
 
   const handleEditCircular = (c: Circular) => {
-    setCircularTitle(c.title);
-    setCircularSubject(c.subject || "");
+    setCircularBoardNumber(c.boardNumber);
+    setCircularSubject(c.subject);
     setCircularDateOfIssue(c.dateOfIssue);
     setCircularUrl(c.url || "");
     setCircularFile(null);
@@ -2038,8 +1991,6 @@ function DocumentsAdmin({
 
   const handleEditManual = (m: Manual) => {
     setManualTitle(m.title);
-    setManualDate(m.date || "");
-    setManualSubject(m.subject || "");
     setManualUrl(m.url || "");
     setManualFile(null);
     setManualCategory(m.category || "general");
@@ -2050,17 +2001,14 @@ function DocumentsAdmin({
     setCaseCaseNumber(cc.caseNumber);
     setCaseDate(cc.date);
     setCaseSubject(cc.subject);
-    setCaseStatus(cc.status || "ongoing");
-    setCaseUrl(cc.url || "");
-    setCaseFile(null);
     setEditingCourtCase(cc);
   };
 
   const handleSaveCircular = async () => {
     if (editingCircular) {
       const upd = await updateCircular(editingCircular.id, {
-        title: circularTitle,
-        subject: circularSubject || undefined,
+        boardNumber: circularBoardNumber,
+        subject: circularSubject,
         dateOfIssue: circularDateOfIssue,
         url: circularUrl || undefined,
         file: circularFile || undefined,
@@ -2071,8 +2019,8 @@ function DocumentsAdmin({
       resetCircularForm();
     } else {
       const c = await createCircular({
-        title: circularTitle,
-        subject: circularSubject || undefined,
+        boardNumber: circularBoardNumber,
+        subject: circularSubject,
         dateOfIssue: circularDateOfIssue,
         url: circularUrl || undefined,
         file: circularFile || undefined,
@@ -2086,8 +2034,6 @@ function DocumentsAdmin({
     if (editingManual) {
       const upd = await updateManual(editingManual.id, {
         title: manualTitle,
-        date: manualDate || undefined,
-        subject: manualSubject || undefined,
         url: manualUrl || undefined,
         file: manualFile || undefined,
         category: manualCategory,
@@ -2099,8 +2045,6 @@ function DocumentsAdmin({
     } else {
       const m = await createManual({
         title: manualTitle,
-        date: manualDate || undefined,
-        subject: manualSubject || undefined,
         url: manualUrl || undefined,
         file: manualFile || undefined,
         category: manualCategory,
@@ -2116,9 +2060,6 @@ function DocumentsAdmin({
         caseNumber: caseCaseNumber,
         date: caseDate,
         subject: caseSubject,
-        status: caseStatus,
-        url: caseUrl || undefined,
-        file: caseFile || undefined,
       });
       onCourtCasesChange(
         courtCases.map((d) => (d.id === editingCourtCase.id ? upd : d))
@@ -2129,9 +2070,6 @@ function DocumentsAdmin({
         caseNumber: caseCaseNumber,
         date: caseDate,
         subject: caseSubject,
-        status: caseStatus,
-        url: caseUrl || undefined,
-        file: caseFile || undefined,
       });
       onCourtCasesChange([cc, ...courtCases]);
       resetCourtCaseForm();
@@ -2307,21 +2245,23 @@ function DocumentsAdmin({
               {editingCircular ? "Edit Circular" : "Add New Circular"}
             </h3>
             <div className="space-y-4">
-              <Input
-                label="Title"
-                value={circularTitle}
-                onChange={(e) => setCircularTitle(e.target.value)}
-              />
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <Input
+                  label="Board Number"
+                  value={circularBoardNumber}
+                  onChange={(e) => setCircularBoardNumber(e.target.value)}
+                />
+                <Input
+                  label="Date of Issue"
+                  type="date"
+                  value={circularDateOfIssue}
+                  onChange={(e) => setCircularDateOfIssue(e.target.value)}
+                />
+              </div>
               <Input
                 label="Subject"
                 value={circularSubject}
                 onChange={(e) => setCircularSubject(e.target.value)}
-              />
-              <Input
-                label="Date of Issue"
-                type="date"
-                value={circularDateOfIssue}
-                onChange={(e) => setCircularDateOfIssue(e.target.value)}
               />
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <Input
@@ -2331,11 +2271,11 @@ function DocumentsAdmin({
                 />
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    File (PDF/Image/DOC/DOCX)
+                    File (PDF or Image)
                   </label>
                   <input
                     type="file"
-                    accept="application/pdf,image/*,.doc,.docx"
+                    accept="application/pdf,image/*"
                     className="block w-full text-sm text-gray-600 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-purple-50 file:text-purple-700 hover:file:bg-purple-100"
                     onChange={(e) =>
                       setCircularFile(e.target.files?.[0] || null)
@@ -2485,10 +2425,10 @@ function DocumentsAdmin({
                   )}
                   <div className="flex-1">
                     <div className="font-semibold text-gray-800">
-                      {c.title}
+                      {c.subject}
                     </div>
                     <div className="text-sm text-gray-600 mt-1">
-                      {c.dateOfIssue}
+                      {c.boardNumber} • {c.dateOfIssue}
                     </div>
                     {c.url && (
                       <div className="text-sm text-[var(--primary)] mt-1">
@@ -2566,19 +2506,6 @@ function DocumentsAdmin({
                 value={manualTitle}
                 onChange={(e) => setManualTitle(e.target.value)}
               />
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <Input
-                  label="Date (optional)"
-                  type="date"
-                  value={manualDate}
-                  onChange={(e) => setManualDate(e.target.value)}
-                />
-                <Input
-                  label="Subject/Description (optional)"
-                  value={manualSubject}
-                  onChange={(e) => setManualSubject(e.target.value)}
-                />
-              </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   Category
@@ -2610,11 +2537,11 @@ function DocumentsAdmin({
                 />
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    File (PDF/Image/DOC/DOCX)
+                    File (PDF or Image)
                   </label>
                   <input
                     type="file"
-                    accept="application/pdf,image/*,.doc,.docx"
+                    accept="application/pdf,image/*"
                     className="block w-full text-sm text-gray-600 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
                     onChange={(e) => setManualFile(e.target.files?.[0] || null)}
                   />
@@ -2772,11 +2699,6 @@ function DocumentsAdmin({
                         </span>
                       )}
                     </div>
-                    <div className="text-sm text-gray-600 mt-1">
-                      {m.date && <span>{new Date(m.date).toLocaleDateString()}</span>}
-                      {m.date && m.subject && <span> • </span>}
-                      {m.subject && <span>{m.subject}</span>}
-                    </div>
                     {m.url && (
                       <div className="text-sm text-[var(--primary)] mt-1">
                         <a
@@ -2865,47 +2787,6 @@ function DocumentsAdmin({
                   value={caseSubject}
                   onChange={(e) => setCaseSubject(e.target.value)}
                 />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Status
-                </label>
-                <select
-                  value={caseStatus}
-                  onChange={(e) =>
-                    setCaseStatus(
-                      e.target.value as "pending" | "ongoing" | "closed"
-                    )
-                  }
-                  className="block w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm shadow-sm focus:border-[var(--primary)] focus:ring-1 focus:ring-[var(--primary)]"
-                >
-                  <option value="pending">Pending</option>
-                  <option value="ongoing">Ongoing</option>
-                  <option value="closed">Closed</option>
-                </select>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <Input
-                  label="URL (optional)"
-                  value={caseUrl}
-                  onChange={(e) => setCaseUrl(e.target.value)}
-                />
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    File (PDF/Image/DOC/DOCX) (optional)
-                  </label>
-                  <input
-                    type="file"
-                    accept="application/pdf,image/*,.doc,.docx"
-                    className="block w-full text-sm text-gray-600 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-red-50 file:text-red-700 hover:file:bg-red-100"
-                    onChange={(e) =>
-                      setCaseFile(e.target.files?.[0] || null)
-                    }
-                  />
-                  <div className="text-xs text-gray-500 mt-1">
-                    Provide either a URL or upload a file.
-                  </div>
-                </div>
               </div>
               <div className="flex gap-2">
                 <Button onClick={handleSaveCourtCase}>
@@ -3049,18 +2930,6 @@ function DocumentsAdmin({
                     <div className="text-sm text-gray-600 mt-1">
                       {new Date(c.date).toLocaleDateString()} • {c.subject}
                     </div>
-                    {c.url && (
-                      <div className="text-sm text-[var(--primary)] mt-1">
-                        <a
-                          className="underline hover:text-[var(--accent)]"
-                          href={c.url}
-                          target="_blank"
-                          rel="noreferrer"
-                        >
-                          View Document →
-                        </a>
-                      </div>
-                    )}
                   </div>
                   <div className="flex gap-2">
                     <Button
@@ -3464,7 +3333,15 @@ function ForumAdmin({
             </label>
             <select
               value={category}
-              onChange={(e) => setCategory(e.target.value as "technical" | "social" | "organizational" | "general")}
+              onChange={(e) =>
+                setCategory(
+                  e.target.value as
+                    | "technical"
+                    | "social"
+                    | "organizational"
+                    | "general"
+                )
+              }
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--primary)] focus:border-transparent"
             >
               <option value="general">General</option>
@@ -4356,6 +4233,9 @@ function SettingsAdmin({
           )}
         </div>
       </motion.div>
+
+      {/* Membership Data Table */}
+      <MembershipsAdmin />
     </div>
   );
 }
@@ -5404,6 +5284,7 @@ function MutualTransfersAdmin({
 function DonationsAdmin() {
   const [donations, setDonations] = useState<import("../types").Donation[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     fetchDonations();
@@ -5412,18 +5293,20 @@ function DonationsAdmin() {
   const fetchDonations = async () => {
     try {
       setLoading(true);
-      const token = localStorage.getItem("token");
-      const response = await fetch("http://localhost:5001/api/donations", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      const data = await response.json();
-      if (data.success) {
-        setDonations(data.data);
-      }
+      setError(null);
+
+      console.log("Fetching donations from API...");
+
+      const data = await getAllDonations();
+      console.log("Donations data received:", data);
+      console.log("Number of donations:", data?.length || 0);
+
+      setDonations(data || []);
     } catch (error) {
       console.error("Error fetching donations:", error);
+      setError(
+        error instanceof Error ? error.message : "Failed to fetch donations"
+      );
     } finally {
       setLoading(false);
     }
@@ -5546,7 +5429,9 @@ function DonationsAdmin() {
       rows
         .map(
           (row) =>
-            "<tr>" + row.map((cell) => "<td>" + cell + "</td>").join("") + "</tr>"
+            "<tr>" +
+            row.map((cell) => "<td>" + cell + "</td>").join("") +
+            "</tr>"
         )
         .join(""),
       "</tbody>",
@@ -5581,6 +5466,20 @@ function DonationsAdmin() {
     return (
       <div className="flex items-center justify-center h-64">
         <Spinner />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="bg-red-50 border border-red-200 rounded-lg p-6 text-center">
+        <div className="text-red-700 font-medium mb-2">
+          Error Loading Donations
+        </div>
+        <div className="text-red-600 text-sm">{error}</div>
+        <Button onClick={fetchDonations} className="mt-4">
+          Try Again
+        </Button>
       </div>
     );
   }
@@ -5728,6 +5627,18 @@ function DonationsAdmin() {
         </Button>
       </div>
 
+      {/* Debug Info */}
+      {import.meta.env.DEV && (
+        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 text-sm">
+          <div className="font-semibold text-blue-900 mb-2">Debug Info:</div>
+          <div className="text-blue-800">
+            <div>Total donations fetched: {donations.length}</div>
+            <div>Loading: {loading ? "Yes" : "No"}</div>
+            <div>Error: {error || "None"}</div>
+          </div>
+        </div>
+      )}
+
       {/* Donations Table */}
       <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
         <div className="overflow-x-auto">
@@ -5738,10 +5649,13 @@ function DonationsAdmin() {
                   Date
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Donor
+                  Donor Name
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Contact
+                  Email
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Mobile
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Amount
@@ -5750,10 +5664,31 @@ function DonationsAdmin() {
                   Purpose
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Type
+                  Employee
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Status
+                  Employee ID
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Designation
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Division
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Department
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Payment Status
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Payment Method
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Payment Date
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Payment ID
                 </th>
               </tr>
             </thead>
@@ -5761,7 +5696,7 @@ function DonationsAdmin() {
               {donations.length === 0 ? (
                 <tr>
                   <td
-                    colSpan={7}
+                    colSpan={15}
                     className="px-6 py-12 text-center text-gray-500"
                   >
                     No donations yet
@@ -5785,17 +5720,10 @@ function DonationsAdmin() {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="flex items-center gap-2">
-                        <div>
-                          <div className="text-sm font-medium text-gray-900">
-                            {donation.isAnonymous
-                              ? "Anonymous Donor"
-                              : donation.fullName}
-                          </div>
-                          {donation.isEmployee && donation.designation && (
-                            <div className="text-xs text-gray-500">
-                              {donation.designation}
-                            </div>
-                          )}
+                        <div className="text-sm font-medium text-gray-900">
+                          {donation.isAnonymous
+                            ? "Anonymous Donor"
+                            : donation.fullName || "N/A"}
                         </div>
                         {donation.isAnonymous && (
                           <span className="px-2 py-0.5 bg-gray-100 text-gray-600 text-xs rounded-full font-medium">
@@ -5804,14 +5732,18 @@ function DonationsAdmin() {
                         )}
                       </div>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                       {donation.isAnonymous ? (
-                        <span className="text-sm text-gray-400">Hidden</span>
+                        <span className="text-gray-400">Hidden</span>
                       ) : (
-                        <div className="text-sm text-gray-900">
-                          <div>{donation.email}</div>
-                          <div className="text-gray-500">{donation.mobile}</div>
-                        </div>
+                        donation.email || "N/A"
+                      )}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                      {donation.isAnonymous ? (
+                        <span className="text-gray-400">Hidden</span>
+                      ) : (
+                        donation.mobile || "N/A"
                       )}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
@@ -5831,27 +5763,32 @@ function DonationsAdmin() {
                             : "bg-gray-100 text-gray-700"
                         }`}
                       >
-                        {donation.purpose.charAt(0).toUpperCase() +
-                          donation.purpose.slice(1)}
+                        {donation.purpose?.charAt(0).toUpperCase() +
+                          donation.purpose?.slice(1) || "General"}
                       </span>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="flex flex-col gap-1">
-                        <span
-                          className={`px-2 py-1 text-xs rounded-full font-medium inline-block w-fit ${
-                            donation.isEmployee
-                              ? "bg-[var(--primary)]/10 text-[var(--primary)]"
-                              : "bg-gray-100 text-gray-600"
-                          }`}
-                        >
-                          {donation.isEmployee ? "Employee" : "Public"}
-                        </span>
-                        {donation.isEmployee && donation.division && (
-                          <span className="text-xs text-gray-500">
-                            {donation.division}
-                          </span>
-                        )}
-                      </div>
+                      <span
+                        className={`px-2 py-1 text-xs rounded-full font-medium ${
+                          donation.isEmployee
+                            ? "bg-[var(--primary)]/10 text-[var(--primary)]"
+                            : "bg-gray-100 text-gray-600"
+                        }`}
+                      >
+                        {donation.isEmployee ? "Yes" : "No"}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                      {donation.employeeId || "-"}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                      {donation.designation || "-"}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                      {donation.division || "-"}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                      {donation.department || "-"}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <span
@@ -5863,9 +5800,37 @@ function DonationsAdmin() {
                             : "bg-yellow-100 text-yellow-700"
                         }`}
                       >
-                        {donation.paymentStatus.charAt(0).toUpperCase() +
-                          donation.paymentStatus.slice(1)}
+                        {donation.paymentStatus?.charAt(0).toUpperCase() +
+                          donation.paymentStatus?.slice(1) || "Pending"}
                       </span>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                      {donation.paymentMethod ? (
+                        <span className="px-2 py-1 bg-blue-50 text-blue-700 text-xs rounded-full font-medium">
+                          {donation.paymentMethod.toUpperCase()}
+                        </span>
+                      ) : (
+                        "-"
+                      )}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                      {donation.paymentDate
+                        ? new Date(donation.paymentDate).toLocaleString(
+                            "en-IN",
+                            {
+                              day: "2-digit",
+                              month: "short",
+                              year: "numeric",
+                              hour: "2-digit",
+                              minute: "2-digit",
+                            }
+                          )
+                        : "-"}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-xs text-gray-600 font-mono">
+                      {donation.razorpayPaymentId ||
+                        donation.paymentReference ||
+                        "-"}
                     </td>
                   </tr>
                 ))
@@ -5984,7 +5949,10 @@ function AchievementsAdmin() {
       }
 
       if (editingId) {
-        await updateAchievement(editingId, formData as unknown as Partial<Achievement>);
+        await updateAchievement(
+          editingId,
+          formData as unknown as Partial<Achievement>
+        );
         alert("Achievement updated successfully!");
       } else {
         await createAchievement(formData as unknown as Partial<Achievement>);
