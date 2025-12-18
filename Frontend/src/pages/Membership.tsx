@@ -323,8 +323,9 @@ export default function Membership() {
           } else {
             setError(verifyResponse.message || "Payment verification failed");
           }
-        } catch (error: any) {
-          setError("Payment verification failed: " + (error.message || "Unknown error"));
+        } catch (error) {
+          const errorMessage = error instanceof Error ? error.message : "Unknown error";
+          setError("Payment verification failed: " + errorMessage);
         }
         setSubmitting(false);
       },
