@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { motion } from "framer-motion";
 import Button from "../components/Button";
 import Input from "../components/Input";
@@ -73,6 +73,10 @@ import {
 
 export default function Admin() {
   usePageTitle("CREA • Admin");
+  const [searchParams] = useSearchParams();
+  const urlTab = searchParams.get('tab');
+  const urlSubTab = searchParams.get('subTab');
+  
   const [tab, setTab] = useState<
     | "events"
     | "documents"
@@ -87,7 +91,10 @@ export default function Admin() {
     | "achievements"
     | "breaking-news"
     | "memberships"
-  >("events");
+  >((urlTab as any) || "events");
+  const [documentSubTab, setDocumentSubTab] = useState<"circulars" | "manuals" | "court-cases">(
+    (urlSubTab as any) || "circulars"
+  );
   const [events, setEvents] = useState<EventItem[]>([]);
   const [manuals, setManuals] = useState<Manual[]>([]);
   const [circulars, setCirculars] = useState<Circular[]>([]);
@@ -248,6 +255,8 @@ export default function Admin() {
           onManualsChange={setManuals}
           onCircularsChange={setCirculars}
           onCourtCasesChange={setCases}
+          initialSubTab={documentSubTab}
+          onSubTabChange={setDocumentSubTab}
         />
       )}
       {tab === "forum" && (
@@ -1878,6 +1887,8 @@ function DocumentsAdmin({
   onManualsChange,
   onCircularsChange,
   onCourtCasesChange,
+  initialSubTab = "circulars",
+  onSubTabChange,
 }: {
   manuals: Manual[];
   circulars: Circular[];
@@ -1885,8 +1896,10 @@ function DocumentsAdmin({
   onManualsChange: (d: Manual[]) => void;
   onCircularsChange: (d: Circular[]) => void;
   onCourtCasesChange: (d: CourtCase[]) => void;
+  initialSubTab?: "circulars" | "manuals" | "court-cases";
+  onSubTabChange?: (tab: "circulars" | "manuals" | "court-cases") => void;
 }) {
-  const [subTab, setSubTab] = useState<DocumentSubTab>("circulars");
+  const [subTab, setSubTab] = useState<DocumentSubTab>(initialSubTab);
 
   // Select mode state
   const [selectModeCirculars, setSelectModeCirculars] = useState(false);
@@ -2191,7 +2204,10 @@ function DocumentsAdmin({
         {(["circulars", "manuals", "court-cases"] as const).map((st) => (
           <button
             key={st}
-            onClick={() => setSubTab(st)}
+            onClick={() => {
+              setSubTab(st)
+              onSubTabChange?.(st)
+            }}
             className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
               subTab === st
                 ? "bg-white text-[var(--primary)] shadow-sm"
