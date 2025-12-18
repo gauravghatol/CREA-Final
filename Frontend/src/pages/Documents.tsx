@@ -266,11 +266,6 @@ export default function Documents() {
     }
   }
 
-  const getTypeColor = (_type: DocumentType) => {
-    // Using dashboard color palette only
-    return 'from-[var(--primary)] to-[var(--primary)]'
-  }
-
   return (
     <div className="space-y-6">
       {/* Minimalistic Header */}

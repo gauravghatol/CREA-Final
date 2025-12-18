@@ -64,9 +64,12 @@ export default function Donations() {
     e.preventDefault()
     
     try {
-      const data = await createDonation(formData)
+      const data = await createDonation({
+        ...formData,
+        amount: parseFloat(formData.amount) || 0
+      })
       
-      if (data.success) {
+      if (data) {
         setSubmitted(true)
         
         // Reset form after showing success message
@@ -92,9 +95,6 @@ export default function Donations() {
           setShowEmployeeFields(false)
           setSubmitted(false)
         }, 5000)
-      } else {
-        console.error('Donation submission failed:', data.message)
-        alert('Failed to submit donation. Please try again.')
       }
     } catch (error) {
       console.error('Error submitting donation:', error)

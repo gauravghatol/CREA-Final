@@ -21,7 +21,6 @@ import Signup from './pages/Signup'
 import Admin from './pages/Admin'
 import ForgotPassword from './pages/ForgotPassword'
 import Profile from './pages/Profile'
-import Files from './pages/Files'
 import MutualTransfers from './pages/MutualTransfers'
 import About from './pages/About'
 import ForumModeration from './pages/ForumModeration'
@@ -49,7 +48,6 @@ function AnimatedRoutes() {
         <Route path="/body-details" element={<RequireAuth><PageTransition><BodyDetails /></PageTransition></RequireAuth>} />
         <Route path="/suggestions" element={<RequireAuth><PageTransition><Suggestions /></PageTransition></RequireAuth>} />
         <Route path="/profile" element={<RequireAuth><PageTransition><Profile /></PageTransition></RequireAuth>} />
-        <Route path="/files" element={<RequireAuth><PageTransition><Files /></PageTransition></RequireAuth>} />
         <Route path="/mutual-transfers" element={<RequireAuth><PageTransition><MutualTransfers /></PageTransition></RequireAuth>} />
         <Route path="/external-links" element={<RequireAuth><PageTransition><ExternalLinks /></PageTransition></RequireAuth>} />
         <Route path="/notifications" element={<RequireAuth><PageTransition><Notifications /></PageTransition></RequireAuth>} />
