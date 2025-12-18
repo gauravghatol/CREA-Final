@@ -1555,7 +1555,7 @@ function EventsAdmin({
       await Promise.all(Array.from(selected).map((id) => deleteEvent(id)));
       onChange(data.filter((e) => !selected.has(e.id)));
       setSelected(new Set());
-    } catch (error) {
+    } catch {
       alert("Error deleting events");
     } finally {
       setDeleting(false);
@@ -2099,7 +2099,7 @@ function DocumentsAdmin({
       );
       onCircularsChange(circulars.filter((c) => !selectedCirculars.has(c.id)));
       setSelectedCirculars(new Set());
-    } catch (error) {
+    } catch {
       alert("Error deleting circulars");
     } finally {
       setDeletingCirculars(false);
@@ -2135,7 +2135,7 @@ function DocumentsAdmin({
       );
       onManualsChange(manuals.filter((m) => !selectedManuals.has(m.id)));
       setSelectedManuals(new Set());
-    } catch (error) {
+    } catch {
       alert("Error deleting manuals");
     } finally {
       setDeletingManuals(false);
@@ -2171,7 +2171,7 @@ function DocumentsAdmin({
       );
       onCourtCasesChange(courtCases.filter((c) => !selectedCases.has(c.id)));
       setSelectedCases(new Set());
-    } catch (error) {
+    } catch {
       alert("Error deleting court cases");
     } finally {
       setDeletingCases(false);
@@ -3254,7 +3254,7 @@ function ForumAdmin({
       await Promise.all(Array.from(selected).map((id) => deleteForumTopic(id)));
       onChange(data.filter((t) => !selected.has(t.id)));
       setSelected(new Set());
-    } catch (error) {
+    } catch {
       alert("Error deleting topics");
     } finally {
       setDeleting(false);
@@ -3280,7 +3280,7 @@ function ForumAdmin({
       onChange(data.map((t) => (t.id === editingId ? updated : t)));
       setEditingId(null);
       setEditTitle("");
-    } catch (error) {
+    } catch {
       alert("Error updating topic");
     }
   };
@@ -3327,7 +3327,7 @@ function ForumAdmin({
             </label>
             <select
               value={category}
-              onChange={(e) => setCategory(e.target.value as any)}
+              onChange={(e) => setCategory(e.target.value as "technical" | "social" | "organizational" | "general")}
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--primary)] focus:border-transparent"
             >
               <option value="general">General</option>
@@ -3684,7 +3684,7 @@ function SuggestionsAdmin({
       await Promise.all(Array.from(selected).map((id) => deleteSuggestion(id)));
       onChange(data.filter((s) => !selected.has(s.id)));
       setSelected(new Set());
-    } catch (error) {
+    } catch {
       alert("Error deleting suggestions");
     } finally {
       setDeleting(false);
@@ -5020,7 +5020,7 @@ function MutualTransfersAdmin({
       );
       onChange(data.filter((t) => !selected.has(t.id)));
       setSelected(new Set());
-    } catch (error) {
+    } catch {
       alert("Error deleting transfers");
     } finally {
       setDeleting(false);
@@ -5260,289 +5260,9 @@ function MutualTransfersAdmin({
   );
 }
 
-// Unused legacy function - commented out due to missing API implementations
-/* eslint-disable @typescript-eslint/no-unused-vars */
-if (false) {
-  // @ts-ignore - Keeping for future reference
-  function ForumApprovalAdmin_DISABLED({
-    pendingPosts,
-    pendingComments,
-    onPostsChange,
-    onCommentsChange,
-  }: {
-    pendingPosts: any[];
-    pendingComments: any[];
-    onPostsChange: (posts: any[]) => void;
-    onCommentsChange: (comments: any[]) => void;
-  }) {
-    const [loading, setLoading] = useState(false);
-
-    const handleApprovePost = async (postId: string) => {
-      setLoading(true);
-      try {
-        // await approveForumPost(postId)
-        onPostsChange(pendingPosts.filter((p) => p._id !== postId));
-        alert("Post approved successfully!");
-      } catch (error) {
-        alert("Error approving post: " + (error as Error).message);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    const handleRejectPost = async (postId: string) => {
-      if (!confirm("Are you sure you want to reject and delete this post?"))
-        return;
-      setLoading(true);
-      try {
-        // await rejectForumPost(postId)
-        onPostsChange(pendingPosts.filter((p) => p._id !== postId));
-        alert("Post rejected and deleted");
-      } catch (error) {
-        alert("Error rejecting post: " + (error as Error).message);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    const handleApproveComment = async (
-      postId: string,
-      commentIndex: number
-    ) => {
-      setLoading(true);
-      try {
-        // await approveForumComment(postId, commentIndex)
-        onCommentsChange(
-          pendingComments.filter(
-            (c) => !(c.postId === postId && c.commentIndex === commentIndex)
-          )
-        );
-        alert("Comment approved successfully!");
-      } catch (error) {
-        alert("Error approving comment: " + (error as Error).message);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    const handleRejectComment = async (
-      postId: string,
-      commentIndex: number
-    ) => {
-      if (!confirm("Are you sure you want to reject and delete this comment?"))
-        return;
-      setLoading(true);
-      try {
-        // await rejectForumComment(postId, commentIndex)
-        onCommentsChange(
-          pendingComments.filter(
-            (c) => !(c.postId === postId && c.commentIndex === commentIndex)
-          )
-        );
-        alert("Comment rejected and deleted");
-      } catch (error) {
-        alert("Error rejecting comment: " + (error as Error).message);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    return (
-      <div className="space-y-6">
-        <motion.div
-          className="bg-white rounded-xl border border-gray-200 p-6 shadow-md"
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-        >
-          <div className="flex items-center justify-between mb-6">
-            <div>
-              <h2 className="text-2xl font-bold text-gray-900">
-                Forum Moderation
-              </h2>
-              <p className="text-sm text-gray-500 mt-1">
-                Review and approve pending forum posts and comments
-              </p>
-            </div>
-            <div className="flex items-center gap-4">
-              <div className="px-4 py-2 bg-orange-50 border border-orange-200 rounded-lg">
-                <span className="text-sm text-orange-700 font-medium">
-                  {pendingPosts.length} Pending Posts
-                </span>
-              </div>
-              <div className="px-4 py-2 bg-blue-50 border border-blue-200 rounded-lg">
-                <span className="text-sm text-blue-700 font-medium">
-                  {pendingComments.length} Pending Comments
-                </span>
-              </div>
-            </div>
-          </div>
-
-          {/* Pending Posts Section */}
-          <div className="mb-8">
-            <h3 className="text-xl font-semibold text-gray-800 mb-4 flex items-center gap-2">
-              <svg
-                className="w-5 h-5 text-orange-500"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"
-                />
-              </svg>
-              Pending Posts ({pendingPosts.length})
-            </h3>
-            <div className="space-y-4">
-              {pendingPosts.length === 0 ? (
-                <p className="text-center text-gray-500 py-8 bg-gray-50 rounded-lg">
-                  No pending posts
-                </p>
-              ) : (
-                pendingPosts.map((post) => (
-                  <motion.div
-                    key={post._id}
-                    className="border border-gray-200 rounded-lg p-4 bg-white hover:shadow-md transition-shadow"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                  >
-                    <div className="flex items-start justify-between gap-4">
-                      <div className="flex-1">
-                        <div className="flex items-center gap-2 mb-2">
-                          <span className="px-2 py-1 bg-blue-100 text-blue-700 text-xs rounded font-medium">
-                            {post.topicTitle}
-                          </span>
-                          <span className="text-sm text-gray-500">
-                            by {post.author}
-                          </span>
-                          <span className="text-xs text-gray-400">
-                            {new Date(post.createdAt).toLocaleDateString()}
-                          </span>
-                        </div>
-                        <p className="text-gray-700 whitespace-pre-wrap">
-                          {post.content}
-                        </p>
-                      </div>
-                      <div className="flex gap-2">
-                        <Button
-                          onClick={() => handleApprovePost(post._id)}
-                          disabled={loading}
-                          variant="primary"
-                          className="!py-1 !px-3 !text-sm"
-                        >
-                          ✓ Approve
-                        </Button>
-                        <Button
-                          onClick={() => handleRejectPost(post._id)}
-                          disabled={loading}
-                          variant="secondary"
-                          className="!py-1 !px-3 !text-sm !bg-red-50 !text-red-600 hover:!bg-red-100"
-                        >
-                          ✗ Reject
-                        </Button>
-                      </div>
-                    </div>
-                  </motion.div>
-                ))
-              )}
-            </div>
-          </div>
-
-          {/* Pending Comments Section */}
-          <div>
-            <h3 className="text-xl font-semibold text-gray-800 mb-4 flex items-center gap-2">
-              <svg
-                className="w-5 h-5 text-blue-500"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z"
-                />
-              </svg>
-              Pending Comments ({pendingComments.length})
-            </h3>
-            <div className="space-y-4">
-              {pendingComments.length === 0 ? (
-                <p className="text-center text-gray-500 py-8 bg-gray-50 rounded-lg">
-                  No pending comments
-                </p>
-              ) : (
-                pendingComments.map((comment) => (
-                  <motion.div
-                    key={`${comment.postId}-${comment.commentIndex}`}
-                    className="border border-gray-200 rounded-lg p-4 bg-white hover:shadow-md transition-shadow"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                  >
-                    <div className="flex items-start justify-between gap-4">
-                      <div className="flex-1">
-                        <div className="flex items-center gap-2 mb-2">
-                          <span className="px-2 py-1 bg-purple-100 text-purple-700 text-xs rounded font-medium">
-                            {comment.topicTitle}
-                          </span>
-                          <span className="text-xs text-gray-400">
-                            Comment on: {comment.postContent}
-                          </span>
-                        </div>
-                        <div className="flex items-center gap-2 mb-2">
-                          <span className="text-sm text-gray-500">
-                            by {comment.author}
-                          </span>
-                          <span className="text-xs text-gray-400">
-                            {comment.createdAt}
-                          </span>
-                        </div>
-                        <p className="text-gray-700 whitespace-pre-wrap">
-                          {comment.content}
-                        </p>
-                      </div>
-                      <div className="flex gap-2">
-                        <Button
-                          onClick={() =>
-                            handleApproveComment(
-                              comment.postId,
-                              comment.commentIndex
-                            )
-                          }
-                          disabled={loading}
-                          variant="primary"
-                          className="!py-1 !px-3 !text-sm"
-                        >
-                          ✓ Approve
-                        </Button>
-                        <Button
-                          onClick={() =>
-                            handleRejectComment(
-                              comment.postId,
-                              comment.commentIndex
-                            )
-                          }
-                          disabled={loading}
-                          variant="secondary"
-                          className="!py-1 !px-3 !text-sm !bg-red-50 !text-red-600 hover:!bg-red-100"
-                        >
-                          ✗ Reject
-                        </Button>
-                      </div>
-                    </div>
-                  </motion.div>
-                ))
-              )}
-            </div>
-          </div>
-        </motion.div>
-      </div>
-    );
-  }
-}
-/* eslint-enable @typescript-eslint/no-unused-vars */
+// Note: ForumApprovalAdmin_DISABLED function removed - it was a legacy function
+// that is no longer needed as the API endpoints for forum post/comment approval
+// were never implemented.
 
 function DonationsAdmin() {
   const [donations, setDonations] = useState<import("../types").Donation[]>([]);
@@ -5680,21 +5400,21 @@ function DonationsAdmin() {
       d.paymentStatus,
     ]);
 
-    const htmlTable = `
-      <table>
-        <thead>
-          <tr>${headers.map((h) => `<th>${h}</th>`).join("")}</tr>
-        </thead>
-        <tbody>
-          ${rows
-            .map(
-              (row) =>
-                `<tr>${row.map((cell) => `<td>${cell}</td>`).join("")}</tr>`
-            )
-            .join("")}
-        </tbody>
-      </table>
-    `;
+    const htmlTable = [
+      "<table>",
+      "<thead>",
+      "<tr>" + headers.map((h) => "<th>" + h + "</th>").join("") + "</tr>",
+      "</thead>",
+      "<tbody>",
+      rows
+        .map(
+          (row) =>
+            "<tr>" + row.map((cell) => "<td>" + cell + "</td>").join("") + "</tr>"
+        )
+        .join(""),
+      "</tbody>",
+      "</table>",
+    ].join("");
 
     const blob = new Blob([htmlTable], { type: "application/vnd.ms-excel" });
     const link = document.createElement("a");
@@ -6127,10 +5847,10 @@ function AchievementsAdmin() {
       }
 
       if (editingId) {
-        await updateAchievement(editingId, formData as any);
+        await updateAchievement(editingId, formData as unknown as Partial<Achievement>);
         alert("Achievement updated successfully!");
       } else {
-        await createAchievement(formData as any);
+        await createAchievement(formData as unknown as Partial<Achievement>);
         alert("Achievement created successfully!");
       }
 
