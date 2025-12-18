@@ -24,6 +24,8 @@ function AutoRotatingSlideshow({ photos, onImageClick }: { photos: string[], onI
   // Helper function to get full image URL
   const getImageUrl = (photoPath: string) => {
     if (photoPath.startsWith('http')) return photoPath
+    // Handle base64 images (for old events that haven't been migrated)
+    if (photoPath.startsWith('data:')) return photoPath
     return `${API_URL}${photoPath}`
   }
 
