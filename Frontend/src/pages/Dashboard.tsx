@@ -378,33 +378,22 @@ export default function Dashboard() {
 
       {/* Breaking News - Scrolling Ticker */}
       {events.filter(e => e.breaking).length > 0 && (
-        <div className="bg-white border-l-4 border-red-600 shadow-sm overflow-hidden">
-          <style>{`
-            @keyframes scroll-left {
-              0% { transform: translateX(100%); }
-              100% { transform: translateX(-100%); }
-            }
-            .ticker-scroll {
-              display: inline-block;
-              white-space: nowrap;
-              animation: scroll-left 30s linear infinite;
-            }
-          `}</style>
-          <div className="flex items-center h-9">
-            <div className="bg-red-600 text-white px-3 h-full flex items-center flex-shrink-0">
-              <span className="font-semibold text-xs uppercase tracking-wide">Breaking News</span>
-            </div>
-            <div className="flex-1 overflow-hidden relative bg-gray-50">
-              <div className="ticker-scroll py-2">
-                {events.filter(e => e.breaking).map((event, idx) => (
-                  <span key={idx} className="inline-flex items-center mx-6 text-gray-800">
-                    <span className="font-medium text-sm">{event.title}</span>
-                    <span className="mx-2 text-gray-400">•</span>
-                    <span className="text-xs text-gray-500">{new Date(event.date).toLocaleDateString('en-US', { day: '2-digit', month: 'short', year: 'numeric' })}</span>
-                  </span>
-                ))}
-              </div>
-            </div>
+        <div className="relative overflow-hidden rounded-lg shadow-sm">
+          <div className="bg-[var(--accent)] text-[var(--text-dark)] px-4 py-2 font-bold text-sm uppercase text-center">
+            Breaking News
+          </div>
+          <div className="bg-[#fef9f0] border-b-2 border-[var(--accent)] py-3 overflow-hidden">
+            <motion.div
+              animate={{ x: [0, -1000] }}
+              transition={{ duration: 20, repeat: Infinity, ease: 'linear' }}
+              className="whitespace-nowrap text-sm text-gray-700"
+            >
+              {events.filter(e => e.breaking).map((event, idx) => (
+                <span key={idx} className="mx-8">
+                  🔔 {event.title} - {new Date(event.date).toLocaleDateString('en-US', { day: '2-digit', month: 'short', year: 'numeric' })}
+                </span>
+              ))}
+            </motion.div>
           </div>
         </div>
       )}
@@ -423,7 +412,7 @@ export default function Dashboard() {
         
         <div className="p-5">
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
-            {counts.map((c, index) => (
+            {counts.filter(c => ['BSL', 'Mumbai', 'Nagpur', 'Pune', 'Solapur'].includes(c.division)).map((c, index) => (
               <div
                 key={c.division || `division-${index}`}
                 className="bg-gray-50 rounded border border-gray-200 p-3 hover:border-blue-400 hover:bg-blue-50 transition-all"
@@ -452,8 +441,8 @@ export default function Dashboard() {
           </div>
           
           <div className="p-5">
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
-              {achievements.slice(0, 12).map((achievement) => (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+              {achievements.slice(0, 6).map((achievement) => (
                 <div
                   key={achievement._id}
                   className="bg-gray-50 rounded border border-gray-200 overflow-hidden hover:border-blue-400 hover:bg-blue-50 transition-all group"
@@ -594,7 +583,7 @@ export default function Dashboard() {
               },
               { 
                 title: 'All Divisions', 
-                desc: 'Mumbai, Bhusawal, Pune, Solapur, Nagpur',
+                desc: 'Mumbai, BSL, Pune, Solapur, Nagpur',
                 icon: (
                   <svg className="w-5 h-5 text-[var(--accent)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
@@ -810,11 +799,11 @@ export default function Dashboard() {
                 </button>
                 
                 <button
-                  onClick={() => navigate('/documents?tab=manual')}
+                  onClick={() => navigate('/manuals')}
                   className="bg-white border-2 border-gray-200 text-gray-700 rounded-lg p-3 hover:border-blue-500 hover:bg-blue-50 transition-all hover:shadow-lg flex flex-col items-center justify-center gap-1.5 group"
                 >
                   <svg className="w-5 h-5 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
                   </svg>
                   <span className="text-[10px] font-semibold text-center">Manuals</span>
                 </button>
