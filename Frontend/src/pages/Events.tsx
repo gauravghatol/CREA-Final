@@ -177,6 +177,12 @@ function AutoRotatingSlideshow({ photos, onImageClick }: { photos: string[], onI
   const [isPaused, setIsPaused] = useState(false)
   const photosPerView = 3
 
+  // Helper function to get full image URL
+  const getImageUrl = (photoPath: string) => {
+    if (photoPath.startsWith('http')) return photoPath
+    return `${API_URL}${photoPath}`
+  }
+
   // If less than 3 photos, show static grid without carousel
   if (photos.length < 3) {
     return (
@@ -197,7 +203,7 @@ function AutoRotatingSlideshow({ photos, onImageClick }: { photos: string[], onI
                 onClick={() => onImageClick(photo)}
               >
                 <img 
-                  src={photo} 
+                  src={getImageUrl(photo)} 
                   alt={`Event photo ${idx + 1}`}
                   className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
                 />
@@ -281,7 +287,7 @@ function AutoRotatingSlideshow({ photos, onImageClick }: { photos: string[], onI
                 onClick={() => onImageClick(photo)}
               >
                 <img 
-                  src={photo} 
+                  src={getImageUrl(photo)} 
                   alt={`Event photo ${actualIndex + 1}`}
                   className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
                 />
@@ -624,7 +630,13 @@ export default function Events() {
       )}
 
       <Modal open={!!openImg} onClose={() => setOpenImg(null)}>
-        {openImg && <img src={openImg} alt="preview" className="w-full rounded" />}
+        {openImg && (
+          <img 
+            src={openImg.startsWith('http') ? openImg : `${API_URL}${openImg}`} 
+            alt="preview" 
+            className="w-full rounded" 
+          />
+        )}
       </Modal>
 
       {/* Create Event Modal */}
