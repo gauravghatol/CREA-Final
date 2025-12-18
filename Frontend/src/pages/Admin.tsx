@@ -1586,24 +1586,28 @@ function EventsAdmin({
 
     setUploadingPhotos(true);
     try {
-      const newPhotos: string[] = [];
-      for (let i = 0; i < files.length; i++) {
-        const file = files[i];
-        const reader = new FileReader();
-        reader.onload = (event) => {
-          if (event.target?.result) {
-            newPhotos.push(event.target.result as string);
-            if (newPhotos.length === files.length) {
-              setForm({
-                ...form,
-                photos: [...(form.photos || []), ...newPhotos],
-              });
-              setUploadingPhotos(false);
-            }
-          }
-        };
-        reader.readAsDataURL(file);
-      }
+      const photoPromises = Array.from(files).map(
+        (file) =>
+          new Promise<string>((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = (event) => {
+              if (event.target?.result) {
+                resolve(event.target.result as string);
+              } else {
+                reject(new Error("Failed to read file"));
+              }
+            };
+            reader.onerror = () => reject(new Error("File read error"));
+            reader.readAsDataURL(file);
+          })
+      );
+
+      const newPhotos = await Promise.all(photoPromises);
+      setForm((prevForm) => ({
+        ...prevForm,
+        photos: [...(prevForm.photos || []), ...newPhotos],
+      }));
+      setUploadingPhotos(false);
     } catch (error) {
       console.error("Error uploading photos:", error);
       alert("Error uploading photos");
