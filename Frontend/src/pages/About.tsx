@@ -8,6 +8,7 @@ import Card from '../components/Card'
 import { usePageTitle } from '../hooks/usePageTitle'
 import { useAuth } from '../context/auth'
 import Modal from '../components/Modal'
+import { getTotals } from '../services/api'
 
 // Simple Chevron Icons
 const ChevronLeftIcon = ({ className }: { className?: string }) => (
@@ -120,9 +121,28 @@ export default function About() {
   const [expandedFaq, setExpandedFaq] = useState<number | null>(null)
   const [showUploadModal, setShowUploadModal] = useState(false)
   const [charterPdfUrl, setCharterPdfUrl] = useState('/charter-of-demand-demo.pdf')
+  const [memberCount, setMemberCount] = useState(0)
+  const [divisions, setDivisions] = useState(5)
   // Admin milestone creation moved to Admin Panel
 
   const isAdmin = user?.role === 'admin'
+
+  // Fetch actual member count from API
+  useEffect(() => {
+    const fetchTotals = async () => {
+      try {
+        const data = await getTotals()
+        setMemberCount(data.members)
+        setDivisions(data.divisions)
+      } catch (error) {
+        console.error('Failed to fetch totals:', error)
+        // Use default fallback values
+        setMemberCount(1000)
+        setDivisions(5)
+      }
+    }
+    fetchTotals()
+  }, [])
 
   const handlePdfDownload = () => {
     // Create a demo PDF download
@@ -307,11 +327,11 @@ export default function About() {
                   <div className="text-xs sm:text-sm md:text-base text-gray-300">Years of Service</div>
                 </div>
                 <div className="text-center border-x border-[var(--secondary)]">
-                  <CountUp end={5} duration={1.5} suffix="" />
+                  <CountUp end={divisions} duration={1.5} suffix="" />
                   <div className="text-xs sm:text-sm md:text-base text-gray-300">Divisions</div>
                 </div>
                 <div className="text-center">
-                  <CountUp end={1000} duration={2.5} suffix="+" />
+                  <CountUp end={memberCount} duration={2.5} suffix="+" />
                   <div className="text-xs sm:text-sm md:text-base text-gray-300">Members</div>
                 </div>
               </motion.div>
