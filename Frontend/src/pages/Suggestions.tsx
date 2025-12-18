@@ -27,23 +27,20 @@ export default function Suggestions() {
   const charPercentage = (charCount / maxChars) * 100
 
   return (
-    <div className="space-y-8">
-      {/* Enhanced Header */}
-      <div className="relative overflow-hidden bg-gradient-to-br from-[var(--primary)] to-blue-900 rounded-2xl p-8 text-white">
-        <div className="relative z-10">
-          <div className="flex items-center gap-3 mb-2">
-            <div className="p-2 bg-white/20 rounded-lg backdrop-blur-sm">
-              <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
-              </svg>
+    <div className="space-y-6">
+      {/* Minimalistic Header */}
+      <div className="bg-white rounded-lg shadow-sm border border-gray-200">
+        <div className="px-6 py-4 bg-blue-50 border-b border-blue-100">
+          <div className="flex items-center gap-3">
+            <svg className="w-6 h-6 text-[var(--primary)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+            </svg>
+            <div>
+              <h1 className="text-xl font-semibold text-[var(--primary)]">Share Your Ideas</h1>
+              <p className="text-xs text-gray-600">Help Us Improve Services</p>
             </div>
-            <h1 className="text-4xl font-bold !text-white" style={{ color: 'white' }}>Share Your Ideas</h1>
           </div>
-          <p className="text-blue-100 text-lg">Help us improve the portal, processes, and services for all members</p>
         </div>
-        
-        {/* Decorative gradient blob */}
-        <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-[var(--accent)]/20 to-transparent rounded-full blur-3xl"></div>
       </div>
 
       {/* Success Message */}
@@ -83,84 +80,64 @@ export default function Suggestions() {
 
       {/* Info Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 }}
-          className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl p-6 border border-blue-100"
-        >
+        <div className="bg-white rounded-lg p-4 border border-gray-200 shadow-sm">
           <div className="flex items-start gap-3">
-            <div className="p-2 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-lg">
-              <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div className="p-2 bg-blue-100 rounded-lg">
+              <svg className="w-4 h-4 text-[var(--primary)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
               </svg>
             </div>
             <div>
-              <h3 className="font-bold text-blue-900 mb-1">Quick Response</h3>
-              <p className="text-sm text-blue-700">We review all suggestions promptly and implement valuable ideas</p>
+              <h3 className="font-semibold text-sm text-gray-900 mb-0.5">Quick Response</h3>
+              <p className="text-xs text-gray-600">We review all suggestions promptly</p>
             </div>
           </div>
-        </motion.div>
+        </div>
 
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-          className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-xl p-6 border border-green-100"
-        >
+        <div className="bg-white rounded-lg p-4 border border-gray-200 shadow-sm">
           <div className="flex items-start gap-3">
-            <div className="p-2 bg-gradient-to-br from-green-500 to-emerald-600 rounded-lg">
-              <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div className="p-2 bg-orange-100 rounded-lg">
+              <svg className="w-4 h-4 text-[var(--accent)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
               </svg>
             </div>
             <div>
-              <h3 className="font-bold text-green-900 mb-1">Anonymous Option</h3>
-              <p className="text-sm text-green-700">Share suggestions anonymously or with your identity</p>
+              <h3 className="font-semibold text-sm text-gray-900 mb-0.5">Confidential</h3>
+              <p className="text-xs text-gray-600">Your identity remains private</p>
             </div>
           </div>
-        </motion.div>
+        </div>
 
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
-          className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-xl p-6 border border-purple-100"
-        >
+        <div className="bg-white rounded-lg p-4 border border-gray-200 shadow-sm">
           <div className="flex items-start gap-3">
-            <div className="p-2 bg-gradient-to-br from-purple-500 to-pink-600 rounded-lg">
-              <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z" />
+            <div className="p-2 bg-gray-100 rounded-lg">
+              <svg className="w-4 h-4 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
             </div>
             <div>
-              <h3 className="font-bold text-purple-900 mb-1">Continuous Improvement</h3>
-              <p className="text-sm text-purple-700">Your feedback drives our platform evolution</p>
+              <h3 className="font-semibold text-sm text-gray-900 mb-0.5">Impactful</h3>
+              <p className="text-xs text-gray-600">Your ideas drive real change</p>
             </div>
           </div>
-        </motion.div>
+        </div>
       </div>
 
       {/* Main Form */}
       <motion.div 
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.4 }}
-        className="rounded-2xl border bg-white p-8 shadow-lg"
+        transition={{ delay: 0.2 }}
+        className="rounded-lg border bg-white p-6 shadow-sm"
       >
-        <div className="flex items-center gap-3 mb-6 pb-6 border-b">
-          <div className="p-2 bg-gradient-to-br from-[var(--primary)] to-blue-600 rounded-lg">
-            <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-            </svg>
-          </div>
-          <div>
-            <h2 className="text-2xl font-bold text-[var(--primary)]">Submit Your Suggestion</h2>
-            <p className="text-sm text-gray-500">Share detailed feedback to help us serve you better</p>
-          </div>
+        <div className="flex items-center gap-2 mb-4 pb-3 border-b border-gray-200">
+          <svg className="w-5 h-5 text-[var(--primary)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+          </svg>
+          <h2 className="text-base font-semibold text-[var(--primary)]">Submit Your Suggestion</h2>
         </div>
 
-        <div className="space-y-6">
+        <div className="space-y-4">
           {/* Submitter Info */}
           {user && (
             <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg p-4 border border-blue-100">

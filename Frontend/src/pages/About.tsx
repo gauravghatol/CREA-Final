@@ -327,26 +327,6 @@ export default function About() {
         </div>
       </div>
 
-      {/* News Ticker */}
-      <div className="relative overflow-hidden">
-        <div className="bg-[var(--accent)] text-[var(--text-dark)] px-4 py-2 font-bold text-sm uppercase text-center">
-          Upcoming Events
-        </div>
-        <div className="bg-[#fef9f0] border-b-2 border-[var(--accent)] py-3 overflow-hidden">
-          <motion.div
-            animate={{ x: [0, -1000] }}
-            transition={{ duration: 20, repeat: Infinity, ease: 'linear' }}
-            className="whitespace-nowrap text-sm text-gray-700"
-          >
-            <span className="mx-8">📅 Annual General Meeting - 15 Oct 2024</span>
-            <span className="mx-8">🚄 Technical Workshop on High-Speed Rail - 05 Nov 2024</span>
-            <span className="mx-8">🎓 Next Webinar on Safety Protocols - 03 Dec 2024</span>
-            <span className="mx-8">📅 Annual General Meeting - 15 Oct 2024</span>
-            <span className="mx-8">🚄 Technical Workshop on High-Speed Rail - 05 Nov 2024</span>
-          </motion.div>
-        </div>
-      </div>
-
       {/* Aim & Objectives */}
       <div>
         <SectionHeader title="Our Aim & Objectives" subtitle="Guiding principles that drive our mission" />

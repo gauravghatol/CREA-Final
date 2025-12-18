@@ -122,22 +122,22 @@ export default function Donations() {
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
-          className="bg-white rounded-2xl shadow-xl p-12 text-center max-w-2xl mx-auto"
+          className="bg-white rounded-lg shadow-sm border border-gray-200 p-10 text-center max-w-2xl mx-auto"
         >
-          <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
-            <svg className="w-10 h-10 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-5">
+            <svg className="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
             </svg>
           </div>
-          <h2 className="text-3xl font-bold text-[var(--primary)] mb-4">Thank You for Your Generosity!</h2>
-          <p className="text-gray-600 text-lg mb-6">
+          <h2 className="text-2xl font-bold text-[var(--primary)] mb-4">Thank You for Your Generosity!</h2>
+          <p className="text-gray-600 text-base mb-5">
             Your contribution of <span className="font-bold text-[var(--accent)]">₹{formData.amount}</span> will make a significant difference in supporting our mission.
           </p>
-          <p className="text-sm text-gray-500 mb-6">
+          <p className="text-xs text-gray-500 mb-5">
             Payment gateway integration is currently being set up. You will receive confirmation details via email once the payment is processed.
           </p>
-          <div className="flex items-center justify-center gap-2 text-sm text-gray-500">
-            <svg className="w-5 h-5 text-[var(--primary)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div className="flex items-center justify-center gap-2 text-xs text-gray-500">
+            <svg className="w-4 h-4 text-[var(--primary)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
             </svg>
             <span>Your support strengthens our railway engineering community</span>
@@ -148,75 +148,66 @@ export default function Donations() {
   }
 
   return (
-    <div className="space-y-8">
-      {/* Hero Section */}
-      <motion.div
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="relative overflow-hidden bg-gradient-to-br from-[var(--primary)] to-[#1a4d8f] rounded-2xl p-8 md:p-12 text-white"
-      >
-        <div className="relative z-10">
-          <div className="flex items-center gap-4 mb-4">
-            <div className="p-3 bg-white/20 backdrop-blur-sm rounded-xl">
-              <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-              </svg>
-            </div>
+    <div className="space-y-6">      {/* Minimalistic Header */}
+      <div className="bg-white rounded-lg shadow-sm border border-gray-200">
+        <div className="px-5 py-4 bg-blue-50 border-b border-blue-100">
+          <div className="flex items-center gap-3">
+            <svg className="w-6 h-6 text-[var(--primary)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
             <div>
-              <h1 className="text-4xl font-bold !text-white mb-2">Support Our Mission</h1>
-              <p className="text-white/90 text-lg">Your contribution helps us build a stronger railway engineering community</p>
+              <h1 className="text-xl font-semibold text-[var(--primary)]">Support Our Mission</h1>
+              <p className="text-xs text-gray-600">Help Us Serve Railway Engineers Better</p>
             </div>
           </div>
         </div>
-        <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/5 rounded-full blur-2xl"></div>
-      </motion.div>
+      </div>      {/* Hero Section - Removed, keeping only minimalistic header above */}
 
       {/* Impact Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
-          className="bg-white rounded-xl p-6 shadow-md border border-gray-200 text-center"
+          className="bg-white rounded-lg p-5 shadow-sm border border-gray-200 text-center"
         >
-          <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <svg className="w-8 h-8 text-[var(--primary)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-3">
+            <svg className="w-6 h-6 text-[var(--primary)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
             </svg>
           </div>
-          <h3 className="text-2xl font-bold text-[var(--primary)] mb-2">Education & Training</h3>
-          <p className="text-gray-600 text-sm">Supporting professional development programs and workshops</p>
+          <h3 className="text-lg font-bold text-[var(--primary)] mb-2">Education & Training</h3>
+          <p className="text-gray-600 text-xs">Supporting professional development programs and workshops</p>
         </motion.div>
 
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
-          className="bg-white rounded-xl p-6 shadow-md border border-gray-200 text-center"
+          className="bg-white rounded-lg p-5 shadow-sm border border-gray-200 text-center"
         >
-          <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <svg className="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-3">
+            <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
             </svg>
           </div>
-          <h3 className="text-2xl font-bold text-green-600 mb-2">Member Welfare</h3>
-          <p className="text-gray-600 text-sm">Providing support and assistance to members in need</p>
+          <h3 className="text-lg font-bold text-green-600 mb-2">Member Welfare</h3>
+          <p className="text-gray-600 text-xs">Providing support and assistance to members in need</p>
         </motion.div>
 
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
-          className="bg-white rounded-xl p-6 shadow-md border border-gray-200 text-center"
+          className="bg-white rounded-lg p-5 shadow-sm border border-gray-200 text-center"
         >
-          <div className="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <svg className="w-8 h-8 text-[var(--accent)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div className="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-3">
+            <svg className="w-6 h-6 text-[var(--accent)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
             </svg>
           </div>
-          <h3 className="text-2xl font-bold text-[var(--accent)] mb-2">Infrastructure</h3>
-          <p className="text-gray-600 text-sm">Building and maintaining community facilities and resources</p>
+          <h3 className="text-lg font-bold text-[var(--accent)] mb-2">Infrastructure</h3>
+          <p className="text-gray-600 text-xs">Building and maintaining community facilities and resources</p>
         </motion.div>
       </div>
 
@@ -225,10 +216,10 @@ export default function Donations() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.4 }}
-        className="bg-white rounded-2xl shadow-xl p-8"
+        className="bg-white rounded-lg shadow-sm p-5 border border-gray-200"
       >
-        <h2 className="text-2xl font-bold text-[var(--primary)] mb-6 flex items-center gap-2">
-          <span className="text-2xl">₹</span>
+        <h2 className="text-lg font-bold text-[var(--primary)] mb-5 flex items-center gap-2">
+          <span className="text-xl">₹</span>
           Make a Donation
         </h2>
 
@@ -456,69 +447,69 @@ export default function Donations() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.5 }}
-        className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-2xl p-8 border border-blue-200"
+        className="bg-white rounded-lg p-5 border border-gray-200 shadow-sm"
       >
-        <h2 className="text-2xl font-bold text-[var(--primary)] mb-6 flex items-center gap-2">
-          <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <h2 className="text-lg font-bold text-[var(--primary)] mb-5 flex items-center gap-2">
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
           Why Your Support Matters
         </h2>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="flex gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+          <div className="flex gap-3">
             <div className="flex-shrink-0">
-              <div className="w-12 h-12 bg-[var(--primary)] rounded-lg flex items-center justify-center text-white">
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className="w-10 h-10 bg-[var(--primary)]/10 rounded-lg flex items-center justify-center">
+                <svg className="w-5 h-5 text-[var(--primary)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
               </div>
             </div>
             <div>
-              <h4 className="font-bold text-gray-900 mb-1">Empowering Engineers</h4>
-              <p className="text-sm text-gray-600">Supporting continuous learning and professional development for railway engineers across all divisions.</p>
+              <h4 className="font-bold text-gray-900 mb-1 text-sm">Empowering Engineers</h4>
+              <p className="text-xs text-gray-600">Supporting continuous learning and professional development for railway engineers across all divisions.</p>
             </div>
           </div>
 
-          <div className="flex gap-4">
+          <div className="flex gap-3">
             <div className="flex-shrink-0">
-              <div className="w-12 h-12 bg-green-600 rounded-lg flex items-center justify-center text-white">
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
+                <svg className="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
                 </svg>
               </div>
             </div>
             <div>
-              <h4 className="font-bold text-gray-900 mb-1">Community Building</h4>
-              <p className="text-sm text-gray-600">Fostering a strong network of professionals dedicated to excellence in railway engineering.</p>
+              <h4 className="font-bold text-gray-900 mb-1 text-sm">Community Building</h4>
+              <p className="text-xs text-gray-600">Fostering a strong network of professionals dedicated to excellence in railway engineering.</p>
             </div>
           </div>
 
-          <div className="flex gap-4">
+          <div className="flex gap-3">
             <div className="flex-shrink-0">
-              <div className="w-12 h-12 bg-[var(--accent)] rounded-lg flex items-center justify-center text-white">
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className="w-10 h-10 bg-[var(--accent)]/10 rounded-lg flex items-center justify-center">
+                <svg className="w-5 h-5 text-[var(--accent)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
                 </svg>
               </div>
             </div>
             <div>
-              <h4 className="font-bold text-gray-900 mb-1">Knowledge Sharing</h4>
-              <p className="text-sm text-gray-600">Creating platforms for sharing expertise, best practices, and innovative solutions.</p>
+              <h4 className="font-bold text-gray-900 mb-1 text-sm">Knowledge Sharing</h4>
+              <p className="text-xs text-gray-600">Creating platforms for sharing expertise, best practices, and innovative solutions.</p>
             </div>
           </div>
 
-          <div className="flex gap-4">
+          <div className="flex gap-3">
             <div className="flex-shrink-0">
-              <div className="w-12 h-12 bg-purple-600 rounded-lg flex items-center justify-center text-white">
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
+                <svg className="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
                 </svg>
               </div>
             </div>
             <div>
-              <h4 className="font-bold text-gray-900 mb-1">Member Welfare</h4>
-              <p className="text-sm text-gray-600">Providing assistance and support to members during times of need and emergencies.</p>
+              <h4 className="font-bold text-gray-900 mb-1 text-sm">Member Welfare</h4>
+              <p className="text-xs text-gray-600">Providing assistance and support to members during times of need and emergencies.</p>
             </div>
           </div>
         </div>

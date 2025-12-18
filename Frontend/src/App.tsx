@@ -6,6 +6,7 @@ import Footer from './components/Footer'
 import PageTransition from './components/PageTransition'
 import ScrollToTop from './components/ScrollToTop'
 import AuthProvider from './context/AuthContext'
+import { AdvertisementProvider } from './context/AdvertisementContext'
 import { RequireAuth, RequireRole } from './routes/guards'
 import Dashboard from './pages/Dashboard'
 import Events from './pages/Events'
@@ -64,14 +65,16 @@ function App() {
   return (
     <BrowserRouter>
       <AuthProvider>
-        <ScrollToTop />
-        <div className="min-h-screen bg-gray-50 text-gray-900">
-          <Navbar />
-          <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-6">
-            <AnimatedRoutes />
-          </main>
-          <Footer />
-        </div>
+        <AdvertisementProvider>
+          <ScrollToTop />
+          <div className="min-h-screen bg-gray-50 text-gray-900">
+            <Navbar />
+            <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-6">
+              <AnimatedRoutes />
+            </main>
+            <Footer />
+          </div>
+        </AdvertisementProvider>
       </AuthProvider>
     </BrowserRouter>
   )
