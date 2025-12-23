@@ -172,14 +172,14 @@ export default function Footer() {
                   ) : action === "privacy" ? (
                     <button
                       onClick={() => setIsPrivacyModalOpen(true)}
-                      className="text-xs sm:text-sm text-gray-500 transition hover:text-[var(--primary)] hover:underline"
+                      className="text-xs sm:text-sm text-[var(--primary)] transition hover:text-[var(--accent)] text-left"
                     >
                       {label}
                     </button>
                   ) : action === "terms" ? (
                     <button
                       onClick={() => setIsTermsModalOpen(true)}
-                      className="text-xs sm:text-sm text-gray-500 transition hover:text-[var(--primary)] hover:underline"
+                      className="text-xs sm:text-sm text-[var(--primary)] transition hover:text-[var(--accent)] text-left"
                     >
                       {label}
                     </button>
@@ -213,13 +213,13 @@ export default function Footer() {
           <div className="flex flex-wrap items-center gap-2 sm:gap-3">
             <button
               onClick={() => setIsPrivacyModalOpen(true)}
-              className="transition hover:text-[var(--primary)] hover:underline"
+              className="text-[var(--primary)] transition hover:text-[var(--accent)]"
             >
               Privacy Policy
             </button>
             <button
               onClick={() => setIsTermsModalOpen(true)}
-              className="transition hover:text-[var(--primary)] hover:underline"
+              className="text-[var(--primary)] transition hover:text-[var(--accent)]"
             >
               Terms of Use
             </button>
